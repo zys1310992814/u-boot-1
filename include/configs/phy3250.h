@@ -266,7 +266,8 @@
 #define CONFIG_IPADDR          192.168.21.66
 #define CONFIG_SERVERIP        192.168.21.159
 #define CONFIG_BOOTFILE        "uImage"  /* File to load */
-#define CONFIG_BOOTARGS        "console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=192.168.21.159:/home/athurg/nts3250/rootfs ip=192.168.21.66"
+#define CONFIG_BOOTARGS        "console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=192.168.21.159:/home/athurg/nts3250/rootfs ip=192.168.21.66:192.168.21.159:192.168.21.159:255.255.255.0:nts3250.nts-intl.com"
+#define CONFIG_BOOTCMD         "tftp 0x80100000;bootm 0x80100000"
 
 /*
  * BOOTP options
