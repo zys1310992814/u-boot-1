@@ -39,10 +39,6 @@
 #include <asm/io.h>
 #include <asm/byteorder.h>
 #include <environment.h>
-#include <arm926ejs.h>
-#include <lpc3250.h>
-#include <lpc32xx_emc.h>
-
 
 /*
  * This file implements a Common Flash Interface (CFI) driver for
@@ -151,11 +147,6 @@
 # undef  FLASH_CMD_RESET
 # define FLASH_CMD_RESET	AMD_CMD_RESET /* use AMD-Reset instead */
 #endif
-
-#define CONFIG_SYS_FLASH_ADDR0	0x5555
-#define CONFIG_SYS_FLASH_ADDR1	0x2aaa
-#define CONFIG_SYS_FLASH_WORD_SIZE	unsigned short	/* flash word size (width)	*/
-volatile CONFIG_SYS_FLASH_WORD_SIZE *addr2=(CONFIG_SYS_FLASH_WORD_SIZE *)CONFIG_SYS_FLASH_BASE;
 
 typedef union {
 	unsigned char c;
@@ -278,63 +269,6 @@ u64 flash_read64(void *addr)__attribute__((weak, alias("__flash_read64")));
 #define flash_read32	__flash_read32
 #define flash_read64	__flash_read64
 #endif
-
-
-/*----------------------------------------------------------------------- */
-//add terry
-static void  EMC_emcstatic_regs_init(void)
- {
- //volatile UNS_32  tmp32;
-   
-    EMC->emcstatic_regs[0].emcstaticconfig    = EMC_STC_BLS_EN_BIT | EMC_STC_MEMWIDTH_16;
-    EMC->emcstatic_regs[0].emcstaticwaitwen   = 2;  // CS_TO_WE - 1
-    EMC->emcstatic_regs[0].emcstaticwait0en   = 3;  // CS_TO_OE
-    EMC->emcstatic_regs[0].emcstaticwaitrd    = 14; // CS_TO_OUT - 1
-    EMC->emcstatic_regs[0].emcstaticpage      = 0;  // OE_BURST - 1 (page mode)
-    EMC->emcstatic_regs[0].emcstaticwr        = 13; // WE_HOLD_TIME - 2
-    EMC->emcstatic_regs[0].emcstaticturn      = 3;  // OE_TO_HIZ -1
-    
- /* tmp32= EMC->emcstatic_regs[0].emcstaticconfig;
-  printf("EMC->emcstatic_regs[0]_new0: %x\n",tmp32);
-  tmp32= EMC->emcstatic_regs[0].emcstaticwaitwen;
-  printf("EMC->emcstatic_regs[0]_new0: %x\n",tmp32);
-  tmp32= EMC->emcstatic_regs[0].emcstaticwait0en;
-  printf("EMC->emcstatic_regs[0]_new0: %x\n",tmp32);
-  tmp32= EMC->emcstatic_regs[0].emcstaticwaitrd;
-  printf("EMC->emcstatic_regs[0]_new: %x\n",tmp32);
-  
-  printf("EMC->emcstatic_regs[0]_new: %x\n", EMC->emcstatic_regs[0].emcstaticpage);
-  printf("EMC->emcstatic_regs[0]_new: %x\n",EMC->emcstatic_regs[0].emcstaticwr);
-  printf("EMC->emcstatic_regs[0]_new: %x\n",EMC->emcstatic_regs[0].emcstaticturn );
- */ 
-    EMC->emcstatic_regs[1].emcstaticconfig    = EMC_STC_BLS_EN_BIT | EMC_STC_MEMWIDTH_16;
-    EMC->emcstatic_regs[1].emcstaticwaitwen   = 2; 
-    EMC->emcstatic_regs[1].emcstaticwait0en   = 3; 
-    EMC->emcstatic_regs[1].emcstaticwaitrd    = 14;
-    EMC->emcstatic_regs[1].emcstaticpage      = 0; 
-    EMC->emcstatic_regs[1].emcstaticwr        = 13;
-    EMC->emcstatic_regs[1].emcstaticturn      = 3; 
-	// tmp32= (unsigned int)EMC->emcstatic_regs[1];
-  //printf("EMC->emcstatic_regs[1]: %d\n",tmp32);
-    EMC->emcstatic_regs[2].emcstaticconfig    = EMC_STC_BLS_EN_BIT | EMC_STC_MEMWIDTH_16;
-    EMC->emcstatic_regs[2].emcstaticwaitwen   = 2; 
-    EMC->emcstatic_regs[2].emcstaticwait0en   = 3; 
-    EMC->emcstatic_regs[2].emcstaticwaitrd    = 14;
-    EMC->emcstatic_regs[2].emcstaticpage      = 0; 
-    EMC->emcstatic_regs[2].emcstaticwr        = 13;
-    EMC->emcstatic_regs[2].emcstaticturn      = 3; 
-  //tmp32= (unsigned int)EMC->emcstatic_regs[2];
-//printf("EMC->emcstatic_regs[2]: %d\n",tmp32);
-    EMC->emcstatic_regs[3].emcstaticconfig    = EMC_STC_BLS_EN_BIT | EMC_STC_MEMWIDTH_16;
-    EMC->emcstatic_regs[3].emcstaticwaitwen   = 2; 
-    EMC->emcstatic_regs[3].emcstaticwait0en   = 3; 
-    EMC->emcstatic_regs[3].emcstaticwaitrd    = 14;
-    EMC->emcstatic_regs[3].emcstaticpage      = 0; 
-    EMC->emcstatic_regs[3].emcstaticwr        = 13;
-    EMC->emcstatic_regs[3].emcstaticturn      = 3; 
-	// tmp32= (unsigned int)EMC->emcstatic_regs[3];
-//printf("EMC->emcstatic_regs[3]: %d\n",tmp32);
-}
 
 /*-----------------------------------------------------------------------
  */
@@ -567,7 +501,7 @@ static void flash_write_cmd (flash_info_t * info, flash_sect_t sect,
 
 static void flash_unlock_seq (flash_info_t * info, flash_sect_t sect)
 {
-	flash_write_cmd (info, sect,info->addr_unlock1, AMD_CMD_UNLOCK_START);
+	flash_write_cmd (info, sect, info->addr_unlock1, AMD_CMD_UNLOCK_START);
 	flash_write_cmd (info, sect, info->addr_unlock2, AMD_CMD_UNLOCK_ACK);
 }
 
@@ -576,16 +510,7 @@ static void flash_unlock_seq (flash_info_t * info, flash_sect_t sect)
 static int flash_isequal (flash_info_t * info, flash_sect_t sect,
 			  uint offset, uchar cmd)
 {
-
- CONFIG_SYS_FLASH_WORD_SIZE retval;
-	retval = addr2[offset];
-	//printf("retval:   %d\n",retval);
-	if(retval==cmd)
-		return retval ;
-	else
-		return 0;
-
-	/*void *addr;
+	void *addr;
 	cfiword_t cword;
 	int retval;
 
@@ -625,7 +550,7 @@ static int flash_isequal (flash_info_t * info, flash_sect_t sect,
 	}
 	flash_unmap(info, sect, offset, addr);
 
-	return retval;*/
+	return retval;
 }
 
 /*-----------------------------------------------------------------------
@@ -714,13 +639,9 @@ static int flash_is_busy (flash_info_t * info, flash_sect_t sect)
 	case CFI_CMDSET_AMD_STANDARD:
 	case CFI_CMDSET_AMD_EXTENDED:
 #ifdef CONFIG_FLASH_CFI_LEGACY
-	case 0xbf:
+	case CFI_CMDSET_AMD_LEGACY:
 #endif
 		retval = flash_toggle (info, sect, 0, AMD_STATUS_TOGGLE);
-		break;
-		//case 0xbf:
-		retval = !flash_isset (info, sect, 0, FLASH_STATUS_DONE);
-	//	printf("retval in  flash_is_busy : %d\n ",retval);
 		break;
 	default:
 		retval = 0;
@@ -737,14 +658,13 @@ static int flash_status_check (flash_info_t * info, flash_sect_t sector,
 			       ulong tout, char *prompt)
 {
 	ulong start;
-	//volatile CONFIG_SYS_FLASH_WORD_SIZE *addr = (CONFIG_SYS_FLASH_WORD_SIZE *)(info->start[0]);
+
 #if CONFIG_SYS_HZ != 1000
 	tout *= CONFIG_SYS_HZ/1000;
 #endif
 
 	/* Wait for command completion */
 	start = get_timer (0);
-//while (( info->start[sector] & (CONFIG_SYS_FLASH_WORD_SIZE)0x00800080) != (CONFIG_SYS_FLASH_WORD_SIZE)0x00800080){
 	while (flash_is_busy (info, sector)) {
 		if (get_timer (start) > tout) {
 			printf ("Flash %s timeout at address %lx data %lx\n",
@@ -774,7 +694,6 @@ static int flash_full_status_check (flash_info_t * info, flash_sect_t sector,
 	case CFI_CMDSET_INTEL_PROG_REGIONS:
 	case CFI_CMDSET_INTEL_EXTENDED:
 	case CFI_CMDSET_INTEL_STANDARD:
-	case 0xbf:
 		if ((retcode != ERR_OK)
 		    && !flash_isequal (info, sector, 0, FLASH_STATUS_DONE)) {
 			retcode = ERR_INVAL;
@@ -901,13 +820,12 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 		flag = 0;
 		break;
 	}
-	//printf("run write cmd\n");
 	if (!flag)
 		return ERR_NOT_ERASED;
 
 	/* Disable interrupts which might cause a timeout here */
 	flag = disable_interrupts ();
-     // for (i=0; i<4/sizeof(CONFIG_SYS_FLASH_WORD_SIZE){
+
 	switch (info->vendor) {
 	case CFI_CMDSET_INTEL_PROG_REGIONS:
 	case CFI_CMDSET_INTEL_EXTENDED:
@@ -919,12 +837,13 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 	case CFI_CMDSET_AMD_STANDARD:
 #ifdef CONFIG_FLASH_CFI_LEGACY
 	case CFI_CMDSET_AMD_LEGACY:
-	case 0xbf:
 #endif
 		sect = find_sector(info, dest);
-		flash_unlock_seq (info, 0);
-		flash_write_cmd (info, 0, info->addr_unlock1, AMD_CMD_WRITE);
+		flash_unlock_seq (info, sect);
+		flash_write_cmd (info, sect, info->addr_unlock1, AMD_CMD_WRITE);
 		sect_found = 1;
+	//	udelay(1000);
+	//	putc ('.');
 		break;
 	}
 
@@ -946,9 +865,11 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 	/* re-enable interrupts if necessary */
 	if (flag)
 		enable_interrupts ();
+
 	if (!sect_found)
 		sect = find_sector (info, dest);
-	return flash_full_status_check (info, sect, info->write_tout, "write");
+
+	return flash_full_status_check (info, sect, 1200000000/*info->write_tout*/, "write");
 }
 
 #ifdef CONFIG_SYS_FLASH_USE_BUFFER_WRITE
@@ -1023,7 +944,6 @@ static int flash_write_cfibuffer (flash_info_t * info, ulong dest, uchar * cp,
 	case CFI_CMDSET_INTEL_PROG_REGIONS:
 	case CFI_CMDSET_INTEL_STANDARD:
 	case CFI_CMDSET_INTEL_EXTENDED:
-		case 0xbf:
 		write_cmd = (info->vendor == CFI_CMDSET_INTEL_PROG_REGIONS) ?
 					FLASH_CMD_WRITE_BUFFER_PROG : FLASH_CMD_WRITE_TO_BUFFER;
 		flash_write_cmd (info, sector, 0, FLASH_CMD_CLEAR_STATUS);
@@ -1112,7 +1032,7 @@ static int flash_write_cfibuffer (flash_info_t * info, ulong dest, uchar * cp,
 
 		flash_write_cmd (info, sector, 0, AMD_CMD_WRITE_BUFFER_CONFIRM);
 		retcode = flash_full_status_check (info, sector,
-						   info->buffer_write_tout,
+						120000000, //  info->buffer_write_tout,
 						   "buffer write");
 		break;
 
@@ -1133,11 +1053,8 @@ out_unmap:
 int flash_erase (flash_info_t * info, int s_first, int s_last)
 {
 	int rcode = 0;
-	int prot,i;
+	int prot;
 	flash_sect_t sect;
-	//volatile CONFIG_SYS_FLASH_WORD_SIZE *addr = (CONFIG_SYS_FLASH_WORD_SIZE *)(info->start[0]);	
-	//volatile CONFIG_SYS_FLASH_WORD_SIZE *addr2;
-	
 
 	if (info->flash_id != FLASH_MAN_CFI) {
 		puts ("Can't erase unknown flash type - aborted\n");
@@ -1184,48 +1101,18 @@ int flash_erase (flash_info_t * info, int s_first, int s_last)
 				flash_unlock_seq (info, sect);
 				flash_write_cmd (info, sect, 0,
 						 AMD_CMD_ERASE_SECTOR);
+						 
+						 udelay(10000);
 				break;
-
-					//add  terry 
-/*case 0xbf:                  
-					addr2 = (CONFIG_SYS_FLASH_WORD_SIZE *)(info->start[sect]);
-					  flash_write_cmd(info, sect, CONFIG_SYS_FLASH_ADDR0,0x00aa);	
-					  flash_write_cmd(info, sect, CONFIG_SYS_FLASH_ADDR1,0x0055);	
-					  flash_write_cmd(info, sect, CONFIG_SYS_FLASH_ADDR0,0x0080);	
-					  flash_write_cmd(info, sect, CONFIG_SYS_FLASH_ADDR0,0x00aa);	
-					  flash_write_cmd(info, sect, CONFIG_SYS_FLASH_ADDR1,0x0055);	
-					  addr2[0] = (CONFIG_SYS_FLASH_WORD_SIZE)0x0050;   block erase */	
-				//	  printf("block erase  start !!\n");
-					 
-	          	
-					  for (i=0; i<50; i++)			 
-					  	udelay(1000);  /* wait 1 ms */
-					  
-				// flash_write_cmd(info, sect, 0, FLASH_CMD_CLEAR_STATUS);		
-				// flash_write_cmd(info, sect, 0, FLASH_CMD_BLOCK_ERASE);	
-				// flash_write_cmd(info, sect, 0, FLASH_CMD_ERASE_CONFIRM);		
-			/*	if (flash_full_status_check(info, sect, info->erase_blk_tout, "erase")) 
-						{			
-						rcode = 1;		
-						}
-					else		
-						printf(".");	
-					break;*/
 #ifdef CONFIG_FLASH_CFI_LEGACY
 			case CFI_CMDSET_AMD_LEGACY:
-			case 0xbf:
 				flash_unlock_seq (info, 0);
 				flash_write_cmd (info, 0, info->addr_unlock1,
 						AMD_CMD_ERASE_START);
 				flash_unlock_seq (info, 0);
 				flash_write_cmd (info, sect, 0,
-					//0x50);
-					AMD_CMD_ERASE_SECTOR);
-				
-				for (i=0; i<50; i++)			 
-					  	udelay(1000);  /* wait 1 ms */
+						AMD_CMD_ERASE_SECTOR);
 				break;
-				
 #endif
 			default:
 				debug ("Unkown flash vendor %d\n",
@@ -1234,10 +1121,10 @@ int flash_erase (flash_info_t * info, int s_first, int s_last)
 			}
 
 			if (flash_full_status_check
-			    (info, sect, info->erase_blk_tout, "erase")) {
+			    (info, sect, 1200000/*info->erase_blk_tout*/, "erase")) {
 				rcode = 1;
 			} else if (flash_verbose)
-				putc ('*');
+				putc ('.');
 		}
 	}
 
@@ -1370,7 +1257,6 @@ void flash_print_info (flash_info_t * info)
 #define FLASH_SHOW_PROGRESS(scale, dots, digit, dots_sub)
 #endif
 
-
 /*-----------------------------------------------------------------------
  * Copy memory to flash, returns:
  * 0 - OK
@@ -1420,10 +1306,7 @@ int write_buff (flash_info_t * info, uchar * src, ulong addr, ulong cnt)
 
 		rc = flash_write_cfiword (info, wp, cword);
 		if (rc != 0)
-			{
-			printf("1 write \n");
 			return rc;
-			}
 
 		wp += i;
 		FLASH_SHOW_PROGRESS(scale, dots, digit, i);
@@ -1434,12 +1317,11 @@ int write_buff (flash_info_t * info, uchar * src, ulong addr, ulong cnt)
 	buffered_size = (info->portwidth / info->chipwidth);
 	buffered_size *= info->buffer_size;
 	while (cnt >= info->portwidth) {
-		 /*prohibit buffer write when buffer_size is 1 */
+		/* prohibit buffer write when buffer_size is 1 */
 		if (info->buffer_size == 1) {
 			cword.l = 0;
 			for (i = 0; i < info->portwidth; i++)
 				flash_add_byte (info, &cword, *src++);
-			printf("USE_BUFFER_WRITE\n");
 			if ((rc = flash_write_cfiword (info, wp, cword)) != 0)
 				return rc;
 			wp += info->portwidth;
@@ -1488,12 +1370,12 @@ int write_buff (flash_info_t * info, uchar * src, ulong addr, ulong cnt)
 	}
 	for (; i < info->portwidth; ++i)
 		flash_add_byte (info, &cword, flash_read8(p + i));
+
 	return flash_write_cfiword (info, wp, cword);
 }
 
 /*-----------------------------------------------------------------------
  */
- 
 #ifdef CONFIG_SYS_FLASH_PROTECTION
 
 int flash_real_protect (flash_info_t * info, long sector, int prot)
@@ -1694,11 +1576,7 @@ static int cmdset_amd_init(flash_info_t *info, struct cfi_qry *qry)
 	info->cmd_reset = AMD_CMD_RESET;
 
 	cmdset_amd_read_jedec_ids(info);
-	
-	//flash_write_cmd(info, 0, info->cfi_offset, FLASH_CMD_CFI);
-	addr2[CONFIG_SYS_FLASH_ADDR0] = (CONFIG_SYS_FLASH_WORD_SIZE)0x00AA;	
-	addr2[CONFIG_SYS_FLASH_ADDR1] = (CONFIG_SYS_FLASH_WORD_SIZE)0x0055;
-	addr2[CONFIG_SYS_FLASH_ADDR0] = (CONFIG_SYS_FLASH_WORD_SIZE)0x0098;
+	flash_write_cmd(info, 0, info->cfi_offset, FLASH_CMD_CFI);
 
 	return 0;
 }
@@ -1718,7 +1596,6 @@ static void flash_read_jedec_ids (flash_info_t * info)
 		break;
 	case CFI_CMDSET_AMD_STANDARD:
 	case CFI_CMDSET_AMD_EXTENDED:
-		case CFI_CMDSET_SST:
 		cmdset_amd_read_jedec_ids(info);
 		break;
 	default:
@@ -1726,16 +1603,6 @@ static void flash_read_jedec_ids (flash_info_t * info)
 	}
 }
 
-ulong board_flash_get_legacy(ulong base,int banknum,flash_info_t* info)
-{
-	if(banknum==0){
-		info->portwidth=2;
-		info->chipwidth=2;
-		info->interface=0x01;
-		return 1;
-		}else
-			return 0;
-}
 /*-----------------------------------------------------------------------
  * Call board code to request info about non-CFI flash.
  * board_flash_get_legacy needs to fill in at least:
@@ -1748,12 +1615,10 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 	if (board_flash_get_legacy(base, banknum, info)) {
 		/* board code may have filled info completely. If not, we
 		   use JEDEC ID probing. */
-		   info->size=CONFIG_SYS_FLASH_SIZE;
 		if (!info->vendor) {
 			int modes[] = {
-				//CFI_CMDSET_AMD_STANDARD,
-				//CFI_CMDSET_INTEL_STANDARD,
-				CFI_CMDSET_SST
+				CFI_CMDSET_AMD_STANDARD,
+				CFI_CMDSET_INTEL_STANDARD
 			};
 			int i;
 
@@ -1776,9 +1641,9 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 						info->manufacturer_id,
 						info->device_id,
 						info->device_id2);
-			//	if (jedec_flash_match(info, info->start[0]))
-			//		break;
-				//else
+				if (jedec_flash_match(info, info->start[0]))
+					break;
+				else
 					unmap_physmem((void *)info->start[0],
 						      MAP_NOCACHE);
 			}
@@ -1793,19 +1658,17 @@ static int flash_detect_legacy(phys_addr_t base, int banknum)
 		case CFI_CMDSET_AMD_STANDARD:
 		case CFI_CMDSET_AMD_EXTENDED:
 		case CFI_CMDSET_AMD_LEGACY:
-		case CFI_CMDSET_SST:
 			info->cmd_reset = AMD_CMD_RESET;
 			break;
 		}
 		info->flash_id = FLASH_MAN_CFI;
-			return 1;
+		return 1;
 	}
 	return 0; /* use CFI */
 }
 #else
 static inline int flash_detect_legacy(phys_addr_t base, int banknum)
 {
-       printf("use CFI ");
 	return 0; /* use CFI */
 }
 #endif
@@ -1817,50 +1680,31 @@ static inline int flash_detect_legacy(phys_addr_t base, int banknum)
 static void flash_read_cfi (flash_info_t *info, void *buf,
 		unsigned int start, size_t len)
 {
-       
 	u8 *p = buf;
-	//ushort *p = buf;
 	unsigned int i;
 
 	for (i = 0; i < len; i++)
-		//p[i] = flash_read_uchar(info, start + i);
 		p[i] = flash_read_uchar(info, start + i);
 }
 
 static int __flash_detect_cfi (flash_info_t * info, struct cfi_qry *qry)
 {
 	int cfi_offset;
-	int i;
 
 	/* We do not yet know what kind of commandset to use, so we issue
 	   the reset command in both Intel and AMD variants, in the hope
 	   that AMD flash roms ignore the Intel command. */
-	   
-	//flash_write_cmd (info, 0, 0, AMD_CMD_RESET);
-	
+	flash_write_cmd (info, 0, 0, AMD_CMD_RESET);
 	flash_write_cmd (info, 0, 0, FLASH_CMD_RESET);
-	
-	   for(i=0;i<10000;i++);
-	   
+
 	for (cfi_offset=0;
 	     cfi_offset < sizeof(flash_offset_cfi) / sizeof(uint);
 	     cfi_offset++) {
-	     
-		//flash_write_cmd (info, 0, flash_offset_cfi[cfi_offset],
-				 //FLASH_CMD_CFI);
-	       flash_write_cmd (info, 0, CONFIG_SYS_FLASH_ADDR0, 0x00AA);
-		flash_write_cmd (info, 0, CONFIG_SYS_FLASH_ADDR1, 0x0055);
-		flash_write_cmd (info, 0, CONFIG_SYS_FLASH_ADDR0, 0x0098);
-		
-				 	//addr2[CONFIG_SYS_FLASH_ADDR0] = (CONFIG_SYS_FLASH_WORD_SIZE)0x00AA00AA;	
-		//addr2[CONFIG_SYS_FLASH_ADDR1] = (CONFIG_SYS_FLASH_WORD_SIZE)0x00550055;
-		//addr2[CONFIG_SYS_FLASH_ADDR0] = (CONFIG_SYS_FLASH_WORD_SIZE)0x00980098;
-		
+		flash_write_cmd (info, 0, flash_offset_cfi[cfi_offset],
+				 FLASH_CMD_CFI);
 		if (flash_isequal (info, 0, FLASH_OFFSET_CFI_RESP, 'Q')
 		    && flash_isequal (info, 0, FLASH_OFFSET_CFI_RESP + 1, 'R')
 		    && flash_isequal (info, 0, FLASH_OFFSET_CFI_RESP + 2, 'Y')) {
-		    
-		    //printf("ok!!!!");
 			flash_read_cfi(info, qry, FLASH_OFFSET_CFI_RESP,
 					sizeof(struct cfi_qry));
 			info->interface	= le16_to_cpu(qry->interface_desc);
@@ -1907,8 +1751,7 @@ static int flash_detect_cfi (flash_info_t * info, struct cfi_qry *qry)
 
 	for (info->portwidth = CONFIG_SYS_FLASH_CFI_WIDTH;
 	     info->portwidth <= FLASH_CFI_64BIT; info->portwidth <<= 1) {
-		 	for (info->chipwidth = FLASH_CFI_BY16;
-		//for (info->chipwidth = FLASH_CFI_BY8;
+		for (info->chipwidth = FLASH_CFI_BY8;
 		     info->chipwidth <= info->portwidth;
 		     info->chipwidth <<= 1)
 			if (__flash_detect_cfi(info, qry))
@@ -2004,27 +1847,14 @@ ulong flash_get_size (phys_addr_t base, int banknum)
 	info->start[0] = (ulong)map_physmem(base, info->portwidth, MAP_NOCACHE);
 
 	if (flash_detect_cfi (info, &qry)) {
-		
-		flash_write_cmd (info, 0, 0, FLASH_CMD_RESET);
-		addr2[CONFIG_SYS_FLASH_ADDR0] = (CONFIG_SYS_FLASH_WORD_SIZE)0x00AA;
-		addr2[CONFIG_SYS_FLASH_ADDR1] = (CONFIG_SYS_FLASH_WORD_SIZE)0x0055;
-		addr2[CONFIG_SYS_FLASH_ADDR0] = (CONFIG_SYS_FLASH_WORD_SIZE)0x0090;	
-		//value = addr2[0];
-		
-		//info->vendor = le16_to_cpu(qry.p_id);
-		//info->ext_addr = le16_to_cpu(qry.p_adr);
-		//add terry
-		
-		info->vendor = le16_to_cpu(addr2[0]);
-		info->ext_addr = le16_to_cpu(addr2[1]);
-		info->addr_unlock1=CONFIG_SYS_FLASH_ADDR0;
-		info->addr_unlock2=CONFIG_SYS_FLASH_ADDR1;
+		info->vendor = le16_to_cpu(qry.p_id);
+		info->ext_addr = le16_to_cpu(qry.p_adr);
 		num_erase_regions = qry.num_erase_regions;
 
 		if (info->ext_addr) {
-			info->cfi_version = (ushort) flash_read_uchar (info, //flash_read_uchar
+			info->cfi_version = (ushort) flash_read_uchar (info,
 						info->ext_addr + 3) << 8;
-			info->cfi_version |= (ushort) flash_read_uchar (info,//flash_read_uchar
+			info->cfi_version |= (ushort) flash_read_uchar (info,
 						info->ext_addr + 4);
 		}
 
@@ -2033,7 +1863,6 @@ ulong flash_get_size (phys_addr_t base, int banknum)
 #endif
 
 		switch (info->vendor) {
-			
 		case CFI_CMDSET_INTEL_PROG_REGIONS:
 		case CFI_CMDSET_INTEL_STANDARD:
 		case CFI_CMDSET_INTEL_EXTENDED:
@@ -2044,17 +1873,14 @@ ulong flash_get_size (phys_addr_t base, int banknum)
 			cmdset_amd_init(info, &qry);
 			break;
 		default:
-			
-			cmdset_amd_init(info, &qry);
-			break;
-			//printf("CFI: Unknown command set 0x%x\n",
-			//		info->vendor);
+			printf("CFI: Unknown command set 0x%x\n",
+					info->vendor);
 			/*
 			 * Unfortunately, this means we don't know how
 			 * to get the chip back to Read mode. Might
 			 * as well try an Intel-style reset...
 			 */
-			//flash_write_cmd(info, 0, 0, FLASH_CMD_RESET);
+			flash_write_cmd(info, 0, 0, FLASH_CMD_RESET);
 			return 0;
 		}
 
@@ -2068,10 +1894,6 @@ ulong flash_get_size (phys_addr_t base, int banknum)
 			break;
 		case 0x0020:
 			flash_fixup_stm(info, &qry);
-			break;
-			//add 
-			default:
-				flash_fixup_amd(info, &qry);
 			break;
 		}
 
@@ -2183,7 +2005,6 @@ unsigned long flash_init (void)
 {
 	unsigned long size = 0;
 	int i;
-	
 #if defined(CONFIG_SYS_FLASH_AUTOPROTECT_LIST)
 	struct apl_s {
 		ulong start;
@@ -2195,20 +2016,13 @@ unsigned long flash_init (void)
 	char *s = getenv("unlock");
 #endif
 
-	//add terry
-	
-	EMC_emcstatic_regs_init();
-	
-//flash_info[i].flash_id = FLASH_SST160A;
- //printf("flash_id  is :%d\n",flash_info[i].flash_id);
-
 #define BANK_BASE(i)	(((phys_addr_t [CFI_MAX_FLASH_BANKS])CONFIG_SYS_FLASH_BANKS_LIST)[i])
 
 	/* Init: no FLASHes known */
 	for (i = 0; i < CONFIG_SYS_MAX_FLASH_BANKS; ++i) {
 		flash_info[i].flash_id = FLASH_UNKNOWN;
-// printf("flash_id  is :%d\n",flash_info[i].flash_id);
-	//	if (!flash_detect_legacy (BANK_BASE(i), i))
+
+		if (!flash_detect_legacy (BANK_BASE(i), i))
 			flash_get_size (BANK_BASE(i), i);
 		size += flash_info[i].size;
 		if (flash_info[i].flash_id == FLASH_UNKNOWN) {
@@ -2310,4 +2124,3 @@ unsigned long flash_init (void)
 
 	return (size);
 }
-

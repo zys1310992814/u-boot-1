@@ -5,8 +5,9 @@
 
 #ifndef __NTS3250_H__
 #define __NTS3250_H__
-
 //#define  DEBUG
+//#define MII_DEBUG
+
 /*
  *
  * Chip speific options
@@ -75,26 +76,6 @@
 /*
  * NOR Flash configuration
  */
- 
-
-//#define CONFIG_SYS_FLASH_CFI	1   /* The flash is CFI compatible  */
-
-#define CONFIG_SYS_FLASH_ADDR0		0x5555	/* 1st address for flash config cycles	*/
-#define CONFIG_SYS_FLASH_ADDR1		0x2aaa	/* 2nd address for flash config cycles	*/
-/*
-
-
- * The following defines are added for buggy IOP480 byte interface.
- * All other boards should use the standard values (CPCI405 etc.)
- */
-#define CONFIG_SYS_FLASH_READ0		0x0000	/* 0 is standard			*/
-#define CONFIG_SYS_FLASH_READ1		0x0001	/* 1 is standard			*/
-#define CONFIG_SYS_FLASH_READ2		0x0002	/* 2 is standard			*/
-
-#define CONFIG_SYS_FLASH_EMPTY_INFO		/* print 'E' for empty sector on flinfo */
-
-
-
 
 /*-----------------------------------------------------------------------
  * FLASH and environment organization
@@ -107,32 +88,28 @@
 #define CONFIG_SYS_FLASH_INCREMENT	0	/* there is only one bank	*/
 
 #define CONFIG_SYS_MAX_FLASH_BANKS	1	/* max number of memory banks		*/
-#define CONFIG_SYS_FLASH_SIZE		0x00200000
-#define CONFIG_SYS_MAX_FLASH_SECT	1024	/* max number of sectors on one chip	*/
+#define CONFIG_SYS_FLASH_SIZE		0x02000000
+#define CONFIG_SYS_MAX_FLASH_SECT	512	/* max number of sectors on one chip	*/
 #define CONFIG_SYS_FLASH_CFI_WIDTH	FLASH_CFI_16BIT
 
 #define CONFIG_SYS_FLASH_CFI		/* The flash is CFI compatible  */
 #define CONFIG_FLASH_CFI_DRIVER	/* Use common CFI driver	*/
-#define CONFIG_FLASH_CFI_LEGACY  //CONFIG_FLASH_CFI_LEGACY
-#define	CONFIG_SYS_FLASH_CFI_AMD_RESET
+//#define	CONFIG_SYS_FLASH_CFI_AMD_RESET
+#define CONFIG_SYS_FLASH_USE_BUFFER_WRITE 
+//#define CONFIG_SYS_FLASH_ERASE_TOUT	 120000	/* Timeout for Chip Erase (in ms) */
+//#define CONFIG_SYS_FLASH_ERASEBLOCK_TOUT	5000	/* Timeout for Block Erase (in ms) */
+//#define CONFIG_SYS_FLASH_WRITE_TOUT	5000	/* Timeout for Flash Write (in ms) */
 
-#define CONFIG_SYS_FLASH_ERASE_TOUT	30000	/* Timeout for Chip Erase (in ms) */
-#define CONFIG_SYS_FLASH_ERASEBLOCK_TOUT	5000	/* Timeout for Block Erase (in ms) */
-#define CONFIG_SYS_FLASH_WRITE_TOUT	1	/* Timeout for Flash Write (in ms) */
-
-
-//#define CONFIG_SYS_FLASH_BANKS_LIST	{ CONFIG_SYS_FLASH_BASE }
-
-//#define CONFIG_SYS_FLASH_USE_BUFFER_WRITE 1	/* use buffered writes (20x faster)	*/
-//#define CONFIG_SYS_FLASH_PROTECTION	1	/* hardware flash protection		*/
-
-//#define CONFIG_SYS_FLASH_ERASE_TOUT	120000	/* Timeout for Flash Erase (in ms)	*/
-//#define CONFIG_SYS_FLASH_WRITE_TOUT	500	/* Timeout for Flash Write (in ms)	*/
-
-//#define CONFIG_SYS_FLASH_EMPTY_INFO		/* print 'E' for empty sector on flinfo */
-//#define CONFIG_SYS_FLASH_QUIET_TEST	1	/* don't warn upon unknown flash	*/
-
-//#define CONFIG_ENV_IS_IN_FLASH	1	/* use FLASH for environment vars	*/
+/*
+ *env in norflash
+*/
+#define CONFIG_SYS_MONITOR_BASE        TEXT_BASE       /* start of monitor */
+#define CONFIG_SYS_MONITOR_LEN        (128 * 1024)    /* Reserve 128 kB for Mon */ 
+#define CONFIG_ENV_IS_IN_FLASH	1	/* use FLASH for environment vars	*/
+#define CONFIG_ENV_OFFSET          0x1e0000 
+#define CONFIG_ENV_ADDR		     0xe01e0000
+#define CONFIG_ENV_SECT_SIZE    0x20000  // 128K
+#define CONFIG_ENV_SIZE         0x2000  // 
 /*
  * 1KHz clock tick
  */
@@ -148,15 +125,6 @@
  * u-boot specific options
  *
  */
-
-/*
- * Address and size of Environment Data
- */
-#define CONFIG_ENV_IS_IN_NAND   1
-#define CONFIG_ENV_SIZE     0x4000 /* 1 block */
-#define CONFIG_ENV_OFFSET   0x168000 /* Block 90 */
-#define CONFIG_ENV_ADDR     0x80000100 /* Passed to kernel here */
-
 /*
  * Area and size for malloc
  */
@@ -173,6 +141,7 @@
 /*
  * ATAG support
  */
+
 #define CONFIG_CMDLINE_TAG      1
 #define CONFIG_SETUP_MEMORY_TAGS    1
 #define CONFIG_INITRD_TAG       1
@@ -192,20 +161,32 @@
 /*
  * Default boot delay is 3 seconds
  */
-#define CONFIG_BOOTDELAY 3
+//#define CONFIG_BOOTDELAY 3
 #define CONFIG_ZERO_BOOTDELAY_CHECK /* check for keypress on bootdelay==0 */
 
 /*
  * Interrupts are not supported in this boot loader
  */
-#undef CONFIG_USE_IRQ
+//#undef CONFIG_USE_IRQ
 
 /*
  * Use verbose help
  */
 #define CONFIG_SYS_LONGHELP
 
-/*
+//net
+
+//#define CONFIG_TSEC_ENET        /* TSEC ethernet support */
+//#ifndef CONFIG_NET_MULTI
+//#define CONFIG_NET_MULTI        1
+//#endif
+//#define CONFIG_RESET_PHY_R
+//#define CONFIG_GMII             1       /* MII PHY management */
+#undef   USE_PHY_RMII
+#define  CONFIG_MII
+#define  CONFIG_CMD_MII
+
+/*`
  * Command line configuration.
  */
 #include <config_cmd_default.h>
@@ -247,10 +228,10 @@
 #define CONFIG_CMD_NAND
 #define CONFIG_SYS_MAX_NAND_DEVICE 1
 #define CONFIG_SYS_NAND_BASE 0x20020000 /* SLC NAND controller */
-#define CFG_ENV_IS_IN_NAND
+//#define CFG_ENV_IS_IN_NAND
 
 /* allow to overwrite serial and ethaddr */
-#define CONFIG_ENV_OVERWRITE
+//#define CONFIG_ENV_OVERWRITE
 
 /*
  * Support for various capabilities
@@ -264,11 +245,32 @@
  */
 #define CONFIG_NETMASK         255.255.255.0
 #define CONFIG_IPADDR          192.168.21.66
-#define CONFIG_SERVERIP        192.168.21.159
+#define CONFIG_SERVERIP		   192.168.21.99
 #define CONFIG_BOOTFILE        "uImage"  /* File to load */
-#define CONFIG_BOOTARGS        "console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=192.168.21.159:/home/athurg/nts3250/rootfs ip=192.168.21.66:192.168.21.159:192.168.21.159:255.255.255.0:nts3250.nts-intl.com"
-#define CONFIG_BOOTCMD         "tftp 0x80100000;bootm 0x80100000"
+#define CONFIG_BOOTARGS        "console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=192.168.1.51:/home/user/ltib/rootfs ip=192.168.1.193"
 
+#define CONFIG_LOADADDR         0x80100000 /* default location for tftp and bootm */
+#define CONFIG_BOOTDELAY        3       /* -1 disables auto-boot */
+//#define CONFIG_MENUPROMPT       "Hit SPACE key to stop autoboot %2d "
+#define CONFIG_STOP_BOOT_KEY    ' '
+#define CONFIG_BOOT_FAIL_RESET  1
+//#define CONFIG_BOOT_FAIL_RETRY  1
+#define CONFIG_BAUDRATE         115200
+//#define CONFIG_ROOTPATH		/home/user/ltib/rootfs
+//#define CONFIG_BOOTARGS		
+//#define CONFIG_BOOTCOMMAND	"run mtdboot"
+
+#define CONFIG_BOOTCOMMAND	 
+
+#define MTDBOOTCOMMAND "mtdboot="				\
+ "setenv bootargs root=/dev/mtdblock3 rw rootfstype=jffs2 "	\
+	"ip=$(ipaddr) ea_ethaddr=$(ethaddr) "			\
+	"console=ttyS0,115200n8; "				\
+	"tftp;"					\
+	"bootm $(loadaddr)\0"
+	
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	"loadkernel_tftp=tftpboot $(loadaddr) uImage\0" \
 /*
  * BOOTP options
  */

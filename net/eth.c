@@ -164,6 +164,7 @@ int eth_initialize(bd_t *bis)
 
 	show_boot_progress (64);
 #if defined(CONFIG_MII) || defined(CONFIG_CMD_MII)
+	printf ("miiphy_init:  ");
 	miiphy_init();
 #endif
 	/* Try board-specific initialization first.  If it fails or isn't

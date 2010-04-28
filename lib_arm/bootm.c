@@ -80,9 +80,6 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 
 	show_boot_progress (15);
 
-	debug ("## Transferring control to Linux (at address %08lx) ...\n",
-	       (ulong) theKernel);
-
 #if defined (CONFIG_SETUP_MEMORY_TAGS) || \
     defined (CONFIG_CMDLINE_TAG) || \
     defined (CONFIG_INITRD_TAG) || \
@@ -90,6 +87,7 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
     defined (CONFIG_REVISION_TAG) || \
     defined (CONFIG_LCD) || \
     defined (CONFIG_VFD)
+    
 	setup_start_tag (bd);
 #ifdef CONFIG_SERIAL_TAG
 	setup_serial_tag (&params);
@@ -142,14 +140,11 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 static void setup_start_tag (bd_t *bd)
 {
 	params = (struct tag *) bd->bi_boot_params;
-
 	params->hdr.tag = ATAG_CORE;
 	params->hdr.size = tag_size (tag_core);
-
 	params->u.core.flags = 0;
 	params->u.core.pagesize = 0;
 	params->u.core.rootdev = 0;
-
 	params = tag_next (params);
 }
 
@@ -158,16 +153,14 @@ static void setup_start_tag (bd_t *bd)
 static void setup_memory_tags (bd_t *bd)
 {
 	int i;
-
 	for (i = 0; i < CONFIG_NR_DRAM_BANKS; i++) {
 		params->hdr.tag = ATAG_MEM;
 		params->hdr.size = tag_size (tag_mem32);
-
 		params->u.mem.start = bd->bi_dram[i].start;
 		params->u.mem.size = bd->bi_dram[i].size;
-
 		params = tag_next (params);
 	}
+
 }
 #endif /* CONFIG_SETUP_MEMORY_TAGS */
 

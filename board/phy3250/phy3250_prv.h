@@ -110,10 +110,10 @@ extern PHY_HW_T phyhwdesc;
 
 
 // Enable the following define to setup for RMII mode
-#define USE_PHY_RMII
+//#define USE_PHY_RMII
 
 // PHY address (configured via PHY ADRx pins)
-#define PHYDEF_PHYADDR           0x00
+#define PHYDEF_PHYADDR           0x04
 
 //------------------------------------------------------------------------------
 // PHY register and bitfield data

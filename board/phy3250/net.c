@@ -29,6 +29,7 @@
 #include <lpc3250.h>
 #include <configs/phy3250.h>
 #include "phy3250_prv.h"
+//#include "lpc32xx_clkpwr.h"
 
 static unsigned long g_dmabase;
 static unsigned long gdma_size;
@@ -69,7 +70,7 @@ static int RMII_Write (unsigned long PhyReg, unsigned long Value)
 		else
 		{
 			mst--;
-			msDelay(1);
+			msDelay(10);
 		}
 	}
 
@@ -233,6 +234,7 @@ int txrx_setup(void)
 int HWInit(bd_t * bd)
 {
 	int btemp, goodacc;
+	//int tmp;
 	unsigned long tmp1, mst = 250;
 
 	// Enable MAC interface
@@ -243,7 +245,6 @@ int HWInit(bd_t * bd)
 #else
 		CLKPWR_MACCTRL_USE_MII_PINS);
 #endif
-
 	// Set RMII management clock rate. This clock should be slower
 	// than 12.5MHz (for NXP PHYs only). For a divider of 28, the
 	// clock rate when HCLK is 150MHz will be 5.4MHz
@@ -253,8 +254,7 @@ int HWInit(bd_t * bd)
 	ENETMAC->mac1 = (MAC1_SOFT_RESET | MAC1_SIMULATION_RESET |
 		MAC1_RESET_MCS_TX | MAC1_RESET_TX | MAC1_RESET_MCS_RX |
 		MAC1_RESET_RX);
-	ENETMAC->command = (COMMAND_REG_RESET | COMMAND_TXRESET |
-		COMMAND_RXRESET);
+	ENETMAC->command = (COMMAND_REG_RESET | COMMAND_TXRESET |COMMAND_RXRESET);
 	msDelay(10);
 
 	// Initial MAC initialization
@@ -271,27 +271,30 @@ int HWInit(bd_t * bd)
 	// RMII setup
 	ENETMAC->command = (COMMAND_RMII | COMMAND_PASSRUNTFRAME);
 	ENETMAC->supp = SUPP_RESET_RMII;
-	msDelay(10);
 #else
 	// MII setup
-	ENETMAC->command = COMMAND_PASSRUNTFRAME;
+	ENETMAC->command =COMMAND_PASSRUNTFRAME;
+	msDelay(10);
 #endif
 
 	// Reset PHY
-	goodacc = HYPHYReset();
+//	goodacc = HYPHYReset();
 	if (goodacc == 0)
 	{
 		printf("ENET:Reset of PHY timed out\n");
 		return 0;
 	}
 
+
+
+
 	// Enable rate auto-negotiation for the link
+	
 	if (RMII_Write(PHY_REG_BMCR,
 		(PHY_BMCR_SPEED_BIT | PHY_BMCR_AUTON_BIT)) == 0)
 	{
 		return 0;
 	}
-
 	// Wait up to 5 seconds for auto-negotiation to finish
 	mst = 5000;
 	goodacc = 1;
@@ -303,7 +306,7 @@ int HWInit(bd_t * bd)
 		{
 			mst = 0;
 			btemp = 1;
-			printf("ENET:auto-negotiation complete\n");
+		//	printf("ENET:auto-negotiation complete\n");
 		}
 		else
 		{
@@ -328,7 +331,7 @@ int HWInit(bd_t * bd)
 		{
 			mst = 0;
 			btemp = 1;
-			printf("ENET:Link status up\n");
+	//		printf("ENET:Link status up\n");
 		}
 		else
 		{
@@ -367,12 +370,12 @@ int HWInit(bd_t * bd)
 		ENETMAC->mac2 |= MAC2_FULL_DUPLEX;
 		ENETMAC->command |= COMMAND_FULLDUPLEX;
 		ENETMAC->ipgt = IPGT_LOAD(0x15);
-		printf("ENET:FULL DUPLEX\n");
+//		printf("ENET:FULL DUPLEX\n");
 	}
 	else
 	{
 		ENETMAC->ipgt = IPGT_LOAD(0x12);
-		printf("ENET:HALF DUPLEX\n");
+//		printf("ENET:HALF DUPLEX\n");
 	}
 
 	// Configure 100MBit/10MBit mode
@@ -380,13 +383,13 @@ int HWInit(bd_t * bd)
 	{
 		// 100MBase mode
 		ENETMAC->supp = SUPP_SPEED;
-		printf("ENET:100MBase\n");
+//		printf("ENET:100MBase\n");
 	}
 	else
 	{
 		// 10MBase mode
 		ENETMAC->supp = 0;
-		printf("ENET:10Base\n");
+//		printf("ENET:10Base\n");
 	}
 
 	// Save station address
@@ -397,9 +400,8 @@ int HWInit(bd_t * bd)
 	// Setup TX and RX descriptors
 	txrx_setup();
 
-	// Enable broadcast and matching address packets
-	ENETMAC->rxfliterctrl = (RXFLTRW_ACCEPTUBROADCAST |
-		RXFLTRW_ACCEPTPERFECT);
+  // Enable broadcast and matching address packets
+	ENETMAC->rxfliterctrl = (RXFLTRW_ACCEPTUBROADCAST |RXFLTRW_ACCEPTPERFECT);
 
 	// Clear and enable interrupts
 	ENETMAC->intclear = 0xFFFF;
@@ -408,6 +410,8 @@ int HWInit(bd_t * bd)
 	// Enable receive and transmit mode of MAC ethernet core
 	ENETMAC->command |= (COMMAND_RXENABLE | COMMAND_TXENABLE);
 	ENETMAC->mac1 |= MAC1_RECV_ENABLE;
+	msDelay(10);
+	               //MAC1_RECV_ENABLE
 
 	// Perform a 'dummy' send of the first ethernet frame with a size of 0
 	// to 'prime' the MAC. The first packet after a reset seems to wait
@@ -475,18 +479,17 @@ int eth_init (bd_t * bd)
 int eth_rx (void)
 {
 	unsigned long idx, length;
-
 	// Determine if a frame has been received
 	length = 0;
 	idx = ENETMAC->rxconsumeindex;
 	if (ENETMAC->rxproduceindex != idx)
 	{
 		// Clear interrupt
+		//printf("eth_rx\n");
 		ENETMAC->intclear = MACINT_RXDONEINTEN;
 
 		// Frame received, get size of RX packet
 		length = (pRXStatus[idx].statusinfo & 0x7FF);
-
 		/* Pass the packet up to the protocol layer */
 		if (length > 0)
 		{

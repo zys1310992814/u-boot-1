@@ -155,9 +155,10 @@ int board_init (void)
 
 	/* arch number of Logic-Board - MACH_TYPE_LPC3XXX */
 	gd->bd->bi_arch_number = MACH_TYPE_UBOOTSYS;
-
+// add terry
 	/* adress of boot parameters */
-	gd->bd->bi_boot_params = CONFIG_ENV_ADDR;
+	//gd->bd->bi_boot_params = CONFIG_ENV_ADDR;
+	gd->bd->bi_boot_params = 0x80000100;
 
 #ifdef CONFIG_CMD_NAND
 	/* Enable clocks to the SLC NAND controller */

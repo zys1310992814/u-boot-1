@@ -13,51 +13,48 @@
 *~
 *.swp
 *.patch
+*.depend
 
 #
 # Top-level generic files
 #
 
 /System.map
-/u-boot
-/u-boot.hex
-/u-boot.map
-/u-boot.bin
-/u-boot.srec
-/u-boot.ldr
-/u-boot.ldr.hex
-/u-boot.ldr.srec
-/u-boot-onenand.bin
-/u-boot-flexonenand.bin
-
-#
-# Generated files
-#
-
-*.depend
-/LOG
-/errlog
-/reloc_off
-
-# stgit generated dirs
-patches-*
-.stgit-edit.txt
-
-# quilt's files
-patches
-series
-
-# gdb files
-.gdb_history
-
-# cscope files
-cscope.*
+/u-boot*
 
 # tags files
 /ctags
 /etags
 
 # OneNAND IPL files
-/onenand_ipl/onenand-ipl*
-/onenand_ipl/board/*/onenand*
-/onenand_ipl/board/*/*.S
+/nand_spl
+/onenand_ipl
+
+# Other Architecture
+/lib_*
+!/lib_generic
+!/lib_arm
+
+
+/board/*
+!/board/phy3250
+
+
+/cpu/*
+!/cpu/arm926ejs
+
+/include/asm-*
+!/include/asm-arm
+
+/*_config.mk
+!/arm_config.mk
+
+
+#Other Documents Files
+MAINTAINERS
+CHANGELOG*
+COPYING
+CREDITS
+README
+
+/doc

@@ -139,7 +139,8 @@ uchar default_environment[] = {
 	"\0"
 };
 
-#if defined(CONFIG_ENV_IS_IN_NAND)		/* Environment is in Nand Flash */ \
+//#if defined(CONFIG_ENV_IS_IN_NAND)		/* Environment is in Nand Flash */
+#if defined(CONFIG_ENV_IS_IN_FLASH) \
 	|| defined(CONFIG_ENV_IS_IN_SPI_FLASH)
 int default_environment_size = sizeof(default_environment);
 #endif
@@ -242,6 +243,7 @@ void env_relocate (void)
 	 * just relocate the environment pointer
 	 */
 	env_ptr = (env_t *)((ulong)env_ptr + gd->reloc_off);
+	
 	DEBUGF ("%s[%d] embedded ENV at %p\n", __FUNCTION__,__LINE__,env_ptr);
 #else
 	/*
@@ -262,11 +264,12 @@ void env_relocate (void)
 	}
 	else {
 		env_relocate_spec ();
-	}
+	} 
 	gd->env_addr = (ulong)&(env_ptr->data);
 
 #ifdef CONFIG_AMIGAONEG3SE
 	disable_nvram();
+
 #endif
 }
 
