@@ -315,6 +315,7 @@ $(obj)u-boot.srec:	$(obj)u-boot
 
 $(obj)u-boot.bin:	$(obj)u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
+		-@cp -rf $@ /var/tftpboot/uboot
 
 $(obj)u-boot.ldr:	$(obj)u-boot
 		$(LDR) -T $(CONFIG_BFIN_CPU) -c $@ $< $(LDR_FLAGS)
