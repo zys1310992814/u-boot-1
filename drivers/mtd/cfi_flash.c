@@ -842,8 +842,6 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 		flash_unlock_seq (info, sect);
 		flash_write_cmd (info, sect, info->addr_unlock1, AMD_CMD_WRITE);
 		sect_found = 1;
-	//	udelay(1000);
-	//	putc ('.');
 		break;
 	}
 
@@ -869,7 +867,7 @@ static int flash_write_cfiword (flash_info_t * info, ulong dest,
 	if (!sect_found)
 		sect = find_sector (info, dest);
 
-	return flash_full_status_check (info, sect, 1200000000/*info->write_tout*/, "write");
+	return flash_full_status_check (info, sect, info->write_tout, "write");
 }
 
 #ifdef CONFIG_SYS_FLASH_USE_BUFFER_WRITE
@@ -1032,7 +1030,7 @@ static int flash_write_cfibuffer (flash_info_t * info, ulong dest, uchar * cp,
 
 		flash_write_cmd (info, sector, 0, AMD_CMD_WRITE_BUFFER_CONFIRM);
 		retcode = flash_full_status_check (info, sector,
-						120000000, //  info->buffer_write_tout,
+						   info->buffer_write_tout,
 						   "buffer write");
 		break;
 
@@ -1101,8 +1099,6 @@ int flash_erase (flash_info_t * info, int s_first, int s_last)
 				flash_unlock_seq (info, sect);
 				flash_write_cmd (info, sect, 0,
 						 AMD_CMD_ERASE_SECTOR);
-						 
-						 udelay(10000);
 				break;
 #ifdef CONFIG_FLASH_CFI_LEGACY
 			case CFI_CMDSET_AMD_LEGACY:
@@ -1121,7 +1117,7 @@ int flash_erase (flash_info_t * info, int s_first, int s_last)
 			}
 
 			if (flash_full_status_check
-			    (info, sect, 1200000/*info->erase_blk_tout*/, "erase")) {
+			    (info, sect, info->erase_blk_tout, "erase")) {
 				rcode = 1;
 			} else if (flash_verbose)
 				putc ('.');
