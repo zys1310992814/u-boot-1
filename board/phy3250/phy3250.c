@@ -63,6 +63,9 @@ void reset_timer (void)
 ulong get_timer (ulong base)
 {
 	ulong tcr = TIMER_CNTR0->tc;
+
+	tcr = (tcr < base) ? (0xFFFFFFFF - base + tcr ) : (tcr - base);
+	
 	return tcr;
 }
 
