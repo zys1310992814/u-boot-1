@@ -819,6 +819,13 @@ typedef struct
 } WDT_REGS_T;
 
 /**********************************************************************
+* wdtim_emr register definitions
+**********************************************************************/
+/* Interrupt flag for MATCH 0 interrupt */
+#define WDT_MATCH_CTRL           _BIT(5)
+
+
+/**********************************************************************
 * wdtim_int register definitions
 **********************************************************************/
 /* Interrupt flag for MATCH 0 interrupt */

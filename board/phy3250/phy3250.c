@@ -84,8 +84,15 @@ void reset_cpu(ulong addr)
 	CLKPWR->clkpwr_timer_clk_ctrl |= CLKPWR_PWMCLK_WDOG_EN;
 
 	/* Force RESETOUT_N active */
-	WDT->wdtim_mctrl = WDT_RESFRC1;
+	WDT->wdtim_mctrl = WDT_M_RES1;
+
+	/* Setup Match value and enable match ctrl */
+	WDT->wdtim_match0 = 100000;
+	WDT->wdtim_emr = WDT_MATCH_CTRL;
+
+	/* Enable WatchDog Timer */
 	WDT->wdtim_ctrl = WDT_COUNT_ENAB;
+
 
 	/* Wait forever */
 	while (1);
