@@ -1,6 +1,6 @@
 #
-# (C) Copyright 2002
-# Gary Jennejohn, DENX Software Engineering, <gj@denx.de>
+# Copyright (C) 2008 by NXP Semiconductors
+# All rights reserved.
 #
 # See file CREDITS for list of people who contributed to this
 # project.
@@ -21,15 +21,32 @@
 # MA 02111-1307 USA
 #
 
-PLATFORM_RELFLAGS += -fno-strict-aliasing  -fno-common -ffixed-r8 \
-	-msoft-float
+include $(TOPDIR)/config.mk
 
-PLATFORM_CPPFLAGS += -march=armv5te
-# =========================================================================
-#
-# Supply options according to compiler version
-#
-# =========================================================================
-PLATFORM_CPPFLAGS +=$(call cc-option,-mapcs-32,-mabi=aapcs-linux)
-PLATFORM_CPPFLAGS +=$(call cc-option,-mno-thumb-interwork,)
-PLATFORM_RELFLAGS +=$(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,))
+LIB	= $(obj)lib$(BOARD).a
+
+COBJS	:= phy3250.o nand.o net.o
+COBJS	+= lowlevelsys_init.o
+SOBJS	:= lowlevel_init.o
+
+SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c)
+OBJS	:= $(addprefix $(obj),$(COBJS))
+SOBJS	:= $(addprefix $(obj),$(SOBJS))
+
+$(LIB):	$(obj).depend $(OBJS) $(SOBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS) $(SOBJS)
+
+clean:
+	rm -f $(SOBJS) $(OBJS)
+
+distclean:	clean
+	rm -f $(LIB) core *.bak .depend
+
+#########################################################################
+
+# defines $(obj).depend target
+include $(SRCTREE)/rules.mk
+
+sinclude $(obj).depend
+
+#########################################################################

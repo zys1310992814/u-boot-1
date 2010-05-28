@@ -151,7 +151,7 @@ ifeq ($(ARCH),ppc)
 CROSS_COMPILE = ppc_8xx-
 endif
 ifeq ($(ARCH),arm)
-CROSS_COMPILE = arm-linux-
+CROSS_COMPILE = arm-none-eabi-
 endif
 ifeq ($(ARCH),i386)
 CROSS_COMPILE = i386-linux-
@@ -315,6 +315,7 @@ $(obj)u-boot.srec:	$(obj)u-boot
 
 $(obj)u-boot.bin:	$(obj)u-boot
 		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
+		-@cp -rf $@ /var/tftpboot/uboot
 
 $(obj)u-boot.ldr:	$(obj)u-boot
 		$(LDR) -T $(CONFIG_BFIN_CPU) -c $@ $< $(LDR_FLAGS)
@@ -2710,6 +2711,16 @@ at91sam9rlek_config	:	unconfig
 		$(XECHO) "... with environment variable in SPI DATAFLASH CS0" ; \
 	fi;
 	@$(MKCONFIG) -a at91sam9rlek arm arm926ejs at91sam9rlek atmel at91
+
+#########################################################################
+## NXP ARM926EJ-S Systems
+#########################################################################
+
+phy3250_config	:	unconfig
+	@$(MKCONFIG) $(@:_config=) arm arm926ejs phy3250 NULL lpc3250
+
+ea3250_config:	unconfig
+	@$(MKCONFIG) $(@:_config=) arm arm926ejs ea3250 NULL lpc3250
 
 ########################################################################
 ## ARM Integrator boards - see doc/README-integrator for more info.

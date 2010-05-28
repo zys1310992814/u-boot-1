@@ -1,6 +1,6 @@
 #
-# (C) Copyright 2002
-# Gary Jennejohn, DENX Software Engineering, <gj@denx.de>
+# Copyright (C) 2008 by NXP Semiconductors
+# All rights reserved.
 #
 # See file CREDITS for list of people who contributed to this
 # project.
@@ -12,7 +12,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -21,15 +21,25 @@
 # MA 02111-1307 USA
 #
 
-PLATFORM_RELFLAGS += -fno-strict-aliasing  -fno-common -ffixed-r8 \
-	-msoft-float
+include $(TOPDIR)/config.mk
 
-PLATFORM_CPPFLAGS += -march=armv5te
-# =========================================================================
-#
-# Supply options according to compiler version
-#
-# =========================================================================
-PLATFORM_CPPFLAGS +=$(call cc-option,-mapcs-32,-mabi=aapcs-linux)
-PLATFORM_CPPFLAGS +=$(call cc-option,-mno-thumb-interwork,)
-PLATFORM_RELFLAGS +=$(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,))
+LIB	= $(obj)lib$(SOC).a
+
+COBJS-y	+= serial.o cpu.o clkpwr.o
+
+SRCS    := $(SOBJS:.o=.S) $(COBJS-y:.o=.c)
+OBJS    := $(addprefix $(obj),$(SOBJS) $(COBJS-y))
+
+all:	$(obj).depend $(LIB)
+
+$(LIB):	$(OBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
+
+#########################################################################
+
+# defines $(obj).depend target
+include $(SRCTREE)/rules.mk
+
+sinclude $(obj).depend
+
+#########################################################################
