@@ -456,7 +456,7 @@ int eth_init (bd_t * bd)
 	int rc;
 
 	// Set MAC address from hardware
-	bd->bi_enetaddr[0] = phyhwdesc.mac[0];	bd->bi_enetaddr[1] = phyhwdesc.mac[1];	bd->bi_enetaddr[2] = phyhwdesc.mac[2];	bd->bi_enetaddr[3] = phyhwdesc.mac[3];	bd->bi_enetaddr[4] = phyhwdesc.mac[4];	bd->bi_enetaddr[5] = phyhwdesc.mac[5];
+	bd->bi_enetaddr[0] = phyhwdesc.mac[0];	bd->bi_enetaddr[1] = phyhwdesc.mac[1];	bd->bi_enetaddr[2] = phyhwdesc.mac[2];	bd->bi_enetaddr[3] = phyhwdesc.mac[3];	bd->bi_enetaddr[4] = phyhwdesc.mac[4];	bd->bi_enetaddr[5] = phyhwdesc.mac[5];
 	printf ("\tHW MAC address:  "
 		"%02X:%02X:%02X:%02X:%02X:%02X\n",
 		bd->bi_enetaddr[0], bd->bi_enetaddr[1],
