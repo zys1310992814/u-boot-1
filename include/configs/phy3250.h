@@ -64,8 +64,9 @@
 /*
  * SDRAM physical Memory Map
  */
-#define CONFIG_NR_DRAM_BANKS    1
-#define PHYS_SDRAM_1        0x80000000 /* SDRAM Bank #1 */
+#define CONFIG_NR_DRAM_BANKS	1
+#define PHYS_SDRAM_1		0x80000000 /* SDRAM Bank #1 */
+#define PHYS_SDRAM_SIZE		0x02000000
 
 /*
  * NOR FLASH not supported
@@ -106,10 +107,10 @@
 #define CONFIG_SYS_MONITOR_BASE        TEXT_BASE       /* start of monitor */
 #define CONFIG_SYS_MONITOR_LEN        (128 * 1024)    /* Reserve 128 kB for Mon */ 
 #define CONFIG_ENV_IS_IN_FLASH	1	/* use FLASH for environment vars	*/
-#define CONFIG_ENV_OFFSET          0x1e0000 
-#define CONFIG_ENV_ADDR		     0xe01e0000
-#define CONFIG_ENV_SECT_SIZE    0x20000  // 128K
-#define CONFIG_ENV_SIZE         0x2000  // 
+#define CONFIG_ENV_OFFSET		0x40000
+#define CONFIG_ENV_SECT_SIZE		0x20000  // 128K
+#define CONFIG_ENV_SIZE			0x20000
+#define CONFIG_ENV_ADDR			0xe01e0000
 /*
  * 1KHz clock tick
  */
@@ -244,13 +245,13 @@
  * Network setup
  */
 #define CONFIG_NETMASK         255.255.255.0
-#define CONFIG_IPADDR          192.168.21.66
-#define CONFIG_SERVERIP		   192.168.21.99
+#define CONFIG_IPADDR          192.168.23.193
+#define CONFIG_SERVERIP		   192.168.23.66
 #define CONFIG_BOOTFILE        "uImage"  /* File to load */
-#define CONFIG_BOOTARGS        "console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=192.168.1.51:/home/user/ltib/rootfs ip=192.168.1.193"
+#define CONFIG_BOOTARGS        "console=ttyS0,115200n8"
 
-#define CONFIG_LOADADDR         0x80100000 /* default location for tftp and bootm */
-#define CONFIG_BOOTDELAY        3       /* -1 disables auto-boot */
+#define CONFIG_LOADADDR         0x80000000 /* default location for tftp and bootm */
+#define CONFIG_BOOTDELAY        2       /* -1 disables auto-boot */
 //#define CONFIG_MENUPROMPT       "Hit SPACE key to stop autoboot %2d "
 #define CONFIG_STOP_BOOT_KEY    ' '
 #define CONFIG_BOOT_FAIL_RESET  1
@@ -258,19 +259,17 @@
 #define CONFIG_BAUDRATE         115200
 //#define CONFIG_ROOTPATH		/home/user/ltib/rootfs
 //#define CONFIG_BOOTARGS		
-//#define CONFIG_BOOTCOMMAND	"run mtdboot"
+#define CONFIG_BOOTCOMMAND	"bootm 0xE0060000"
 
-#define CONFIG_BOOTCOMMAND	 
-
-#define MTDBOOTCOMMAND "mtdboot="				\
+//#define MTDBOOTCOMMAND "mtdboot="				\
  "setenv bootargs root=/dev/mtdblock3 rw rootfstype=jffs2 "	\
 	"ip=$(ipaddr) ea_ethaddr=$(ethaddr) "			\
 	"console=ttyS0,115200n8; "				\
 	"tftp;"					\
 	"bootm $(loadaddr)\0"
 	
-#define CONFIG_EXTRA_ENV_SETTINGS \
-	"loadkernel_tftp=tftpboot $(loadaddr) uImage\0" \
+//#define CONFIG_EXTRA_ENV_SETTINGS \
+	"loadkernel_tftp=tftpboot $(loadaddr) uImage\0"
 /*
  * BOOTP options
  */

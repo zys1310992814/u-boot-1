@@ -80,7 +80,7 @@
 /*
  * Clock and crystal information
  */
-#define MAIN_OSC_FREQ	13000000
+#define MAIN_OSC_FREQ	12500000
 #define CLOCK_OSC_FREQ	32768
 
 /* bit position macro */
@@ -253,7 +253,7 @@ typedef struct
 
 /*
  * UART ctrl register definitions
-*/
+ */
 /* UART3 modem control pin enable bit */
 #define UART_U3_MD_CTRL_EN         _BIT(11)
 /* IRRX6 inversion enable bit */
@@ -312,65 +312,65 @@ typedef struct
 
 
 /**********************************************************************
-* Clock and Power control register structures
-**********************************************************************/
+ * Clock and Power control register structures
+ **********************************************************************/
 
 /*
  * Clock and Power control module register structure
  */
 typedef struct
 {
-  volatile unsigned int reserved1 [5];
-  volatile unsigned int clkpwr_bootmap;
-  volatile unsigned int clkpwr_p01_er;
-  volatile unsigned int clkpwr_usbclk_pdiv;
-  volatile unsigned int clkpwr_int_er;
-  volatile unsigned int clkpwr_int_rs;
-  volatile unsigned int clkpwr_int_sr;
-  volatile unsigned int clkpwr_int_ap;
-  volatile unsigned int clkpwr_pin_er;
-  volatile unsigned int clkpwr_pin_rs;
-  volatile unsigned int clkpwr_pin_sr;
-  volatile unsigned int clkpwr_pin_ap;
-  volatile unsigned int clkpwr_hclk_div;
-  volatile unsigned int clkpwr_pwr_ctrl;
-  volatile unsigned int clkpwr_pll397_ctrl;
-  volatile unsigned int clkpwr_main_osc_ctrl;
-  volatile unsigned int clkpwr_sysclk_ctrl;
-  volatile unsigned int clkpwr_lcdclk_ctrl;
-  volatile unsigned int clkpwr_hclkpll_ctrl;
-  volatile unsigned int reserved2;
-  volatile unsigned int clkpwr_adc_clk_ctrl_1;
-  volatile unsigned int clkpwr_usb_ctrl;
-  volatile unsigned int clkpwr_sdramclk_ctrl;
-  volatile unsigned int clkpwr_ddr_lap_nom;
-  volatile unsigned int clkpwr_ddr_lap_count;
-  volatile unsigned int clkpwr_ddr_cal_delay;
-  volatile unsigned int clkpwr_ssp_blk_ctrl;
-  volatile unsigned int clkpwr_i2s_clk_ctrl;
-  volatile unsigned int clkpwr_ms_ctrl;
-  volatile unsigned int reserved4 [3];
-  volatile unsigned int clkpwr_macclk_ctrl;
-  volatile unsigned int reserved5 [4];
-  volatile unsigned int clkpwr_test_clk_sel;
-  volatile unsigned int clkpwr_sw_int;
-  volatile unsigned int clkpwr_i2c_clk_ctrl;
-  volatile unsigned int clkpwr_key_clk_ctrl;
-  volatile unsigned int clkpwr_adc_clk_ctrl;
-  volatile unsigned int clkpwr_pwm_clk_ctrl;
-  volatile unsigned int clkpwr_timer_clk_ctrl;
-  volatile unsigned int clkpwr_timers_pwms_clk_ctrl_1;
-  volatile unsigned int clkpwr_spi_clk_ctrl;
-  volatile unsigned int clkpwr_nand_clk_ctrl;
-  volatile unsigned int reserved7;
-  volatile unsigned int clkpwr_uart3_clk_ctrl;
-  volatile unsigned int clkpwr_uart4_clk_ctrl;
-  volatile unsigned int clkpwr_uart5_clk_ctrl;
-  volatile unsigned int clkpwr_uart6_clk_ctrl;
-  volatile unsigned int clkpwr_irda_clk_ctrl;
-  volatile unsigned int clkpwr_uart_clk_ctrl;
-  volatile unsigned int clkpwr_dmaclk_ctrl;
-  volatile unsigned int clkpwr_autoclock;
+	volatile unsigned int reserved1 [5];
+	volatile unsigned int clkpwr_bootmap;
+	volatile unsigned int clkpwr_p01_er;
+	volatile unsigned int clkpwr_usbclk_pdiv;
+	volatile unsigned int clkpwr_int_er;
+	volatile unsigned int clkpwr_int_rs;
+	volatile unsigned int clkpwr_int_sr;
+	volatile unsigned int clkpwr_int_ap;
+	volatile unsigned int clkpwr_pin_er;
+	volatile unsigned int clkpwr_pin_rs;
+	volatile unsigned int clkpwr_pin_sr;
+	volatile unsigned int clkpwr_pin_ap;
+	volatile unsigned int clkpwr_hclk_div;
+	volatile unsigned int clkpwr_pwr_ctrl;
+	volatile unsigned int clkpwr_pll397_ctrl;
+	volatile unsigned int clkpwr_main_osc_ctrl;
+	volatile unsigned int clkpwr_sysclk_ctrl;
+	volatile unsigned int clkpwr_lcdclk_ctrl;
+	volatile unsigned int clkpwr_hclkpll_ctrl;
+	volatile unsigned int reserved2;
+	volatile unsigned int clkpwr_adc_clk_ctrl_1;
+	volatile unsigned int clkpwr_usb_ctrl;
+	volatile unsigned int clkpwr_sdramclk_ctrl;
+	volatile unsigned int clkpwr_ddr_lap_nom;
+	volatile unsigned int clkpwr_ddr_lap_count;
+	volatile unsigned int clkpwr_ddr_cal_delay;
+	volatile unsigned int clkpwr_ssp_blk_ctrl;
+	volatile unsigned int clkpwr_i2s_clk_ctrl;
+	volatile unsigned int clkpwr_ms_ctrl;
+	volatile unsigned int reserved4 [3];
+	volatile unsigned int clkpwr_macclk_ctrl;
+	volatile unsigned int reserved5 [4];
+	volatile unsigned int clkpwr_test_clk_sel;
+	volatile unsigned int clkpwr_sw_int;
+	volatile unsigned int clkpwr_i2c_clk_ctrl;
+	volatile unsigned int clkpwr_key_clk_ctrl;
+	volatile unsigned int clkpwr_adc_clk_ctrl;
+	volatile unsigned int clkpwr_pwm_clk_ctrl;
+	volatile unsigned int clkpwr_timer_clk_ctrl;
+	volatile unsigned int clkpwr_timers_pwms_clk_ctrl_1;
+	volatile unsigned int clkpwr_spi_clk_ctrl;
+	volatile unsigned int clkpwr_nand_clk_ctrl;
+	volatile unsigned int reserved7;
+	volatile unsigned int clkpwr_uart3_clk_ctrl;
+	volatile unsigned int clkpwr_uart4_clk_ctrl;
+	volatile unsigned int clkpwr_uart5_clk_ctrl;
+	volatile unsigned int clkpwr_uart6_clk_ctrl;
+	volatile unsigned int clkpwr_irda_clk_ctrl;
+	volatile unsigned int clkpwr_uart_clk_ctrl;
+	volatile unsigned int clkpwr_dmaclk_ctrl;
+	volatile unsigned int clkpwr_autoclock;
 } CLKPWR_REGS_T;
 
 
@@ -457,8 +457,8 @@ typedef struct
 
 
 /**********************************************************************
-* clkpwr_usb_ctrl register definitions
-**********************************************************************/
+ * clkpwr_usb_ctrl register definitions
+ **********************************************************************/
 /* USB slave HCLK clock disable (0) / enable (1) bit */
 #define CLKPWR_USBCTRL_HCLK_EN     _BIT(24)
 /* USB I2C enable, (0) = automatic USB I2C enable, (1) = disable (by
@@ -536,8 +536,8 @@ typedef struct
 #define CLKPWR_SDRCLK_CLK_DIS      _BIT(0)
 
 /**********************************************************************
-* clkpwr_timers_pwms_clk_ctrl_1 register definitions
-**********************************************************************/
+ * clkpwr_timers_pwms_clk_ctrl_1 register definitions
+ **********************************************************************/
 /* Timer 3 clock enable, (0) = disable, (1) = enable */
 #define CLKPWR_TMRPWMCLK_TIMER3_EN 0x20
 /* Timer 2 clock enable, (0) = disable, (1) = enable */
@@ -575,8 +575,8 @@ typedef struct
 #define CLKPWR_UARTCLKCTRL_UART3_EN _BIT(0)
 
 /**********************************************************************
-* clkpwr_ssp_blk_ctrl register definitions
-**********************************************************************/
+ * clkpwr_ssp_blk_ctrl register definitions
+ **********************************************************************/
 /* SSP1 RX DMA selection, (0) = SSP1RX not connected/SPI2 connected,
    (1) = SSP1RX connected/SPI2 not connected */
 #define CLKPWR_SSPCTRL_DMA_SSP1RX  _BIT(5)
@@ -596,8 +596,8 @@ typedef struct
 
 
 /**********************************************************************
-* clkpwr_timer_clk_ctrl register definitions
-**********************************************************************/
+ * clkpwr_timer_clk_ctrl register definitions
+ **********************************************************************/
 /* High speed timer clock enable, (0) = disable, (1) = enable */
 #define CLKPWR_PWMCLK_HSTIMER_EN   0x2
 /* Watchdog timer clock enable, (0) = disable, (1) = enable */
@@ -605,8 +605,8 @@ typedef struct
 
 
 /**********************************************************************
-* clkpwr_macclk_ctrl register definitions
-**********************************************************************/
+ * clkpwr_macclk_ctrl register definitions
+ **********************************************************************/
 /* Disables ethernet MAC pins */
 #define CLKPWR_MACCTRL_NO_ENET_PIS 0x00
 /* Ethernet MAC pins setup for MII */
@@ -624,8 +624,8 @@ typedef struct
 
 
 /**********************************************************************
-* clkpwr_timers_pwms_clk_ctrl_1 register definitions
-**********************************************************************/
+ * clkpwr_timers_pwms_clk_ctrl_1 register definitions
+ **********************************************************************/
 /* Timer 3 clock enable, (0) = disable, (1) = enable */
 #define CLKPWR_TMRPWMCLK_TIMER3_EN 0x20
 /* Timer 2 clock enable, (0) = disable, (1) = enable */
@@ -650,27 +650,27 @@ typedef struct
  */
 typedef enum
 {
-  /* Main oscillator clock */
-  CLKPWR_MAINOSC_CLK,
-  /* RTC clock */
-  CLKPWR_RTC_CLK,
-  /* System clock (Main oscillator or PLL397) */
-  CLKPWR_SYSCLK,
-  /* ARM clock, either HCLK(PLL), SYSCLK, or PERIPH_CLK */
-  CLKPWR_ARM_CLK,
-  /* HCLK (HCLKPLL divided, SYSCLK, or PERIPH_CLK) */
-  CLKPWR_HCLK,
-  /* Peripheral clock (HCLKPLL divided or SYSCLK) */
-  CLKPWR_PERIPH_CLK,
-  /* USB HCLK SYS*/
-  CLKPWR_USB_HCLK_SYS,
-  /* USB PLL clock */
-  CLKPWR_48M_CLK,
-  /* DDR clock (HCLKPLL divided or SYSCLK) */
-  CLKPWR_DDR_CLK,
-  /* Sd card controller */
-  CLKPWR_MSSD_CLK,
-  CLKPWR_BASE_INVALID
+	/* Main oscillator clock */
+	CLKPWR_MAINOSC_CLK,
+	/* RTC clock */
+	CLKPWR_RTC_CLK,
+	/* System clock (Main oscillator or PLL397) */
+	CLKPWR_SYSCLK,
+	/* ARM clock, either HCLK(PLL), SYSCLK, or PERIPH_CLK */
+	CLKPWR_ARM_CLK,
+	/* HCLK (HCLKPLL divided, SYSCLK, or PERIPH_CLK) */
+	CLKPWR_HCLK,
+	/* Peripheral clock (HCLKPLL divided or SYSCLK) */
+	CLKPWR_PERIPH_CLK,
+	/* USB HCLK SYS*/
+	CLKPWR_USB_HCLK_SYS,
+	/* USB PLL clock */
+	CLKPWR_48M_CLK,
+	/* DDR clock (HCLKPLL divided or SYSCLK) */
+	CLKPWR_DDR_CLK,
+	/* Sd card controller */
+	CLKPWR_MSSD_CLK,
+	CLKPWR_BASE_INVALID
 } CLKPWR_BASE_CLOCK_T;
 
 /*
@@ -683,30 +683,30 @@ unsigned int sys_get_rate(CLKPWR_BASE_CLOCK_T clkid);
 
 
 /**********************************************************************
-* Timer/counter register structures
-**********************************************************************/
+ * Timer/counter register structures
+ **********************************************************************/
 
 /* Timer module register structures */
 typedef struct
 {
-  volatile unsigned int ir;          /* Timer interrupt status reg */
-  volatile unsigned int tcr;         /* Timer control register */
-  volatile unsigned int tc;          /* Timer counter value reg */
-  volatile unsigned int pr;          /* Timer prescale register */
-  volatile unsigned int pc;          /* Timer prescale counter reg */
-  volatile unsigned int mcr;         /* Timer Match control reg */
-  volatile unsigned int mr[4];       /* Timer Match registers */
-  volatile unsigned int ccr;         /* Timer Capture control reg */
-  volatile unsigned int cr[4];       /* Timer Capture registers */
-  volatile unsigned int emr;         /* Timer External match reg */
-  volatile unsigned int rsvd2[12];   /* Reserved */
-  volatile unsigned int ctcr;        /* Timer Count control reg */
+	volatile unsigned int ir;          /* Timer interrupt status reg */
+	volatile unsigned int tcr;         /* Timer control register */
+	volatile unsigned int tc;          /* Timer counter value reg */
+	volatile unsigned int pr;          /* Timer prescale register */
+	volatile unsigned int pc;          /* Timer prescale counter reg */
+	volatile unsigned int mcr;         /* Timer Match control reg */
+	volatile unsigned int mr[4];       /* Timer Match registers */
+	volatile unsigned int ccr;         /* Timer Capture control reg */
+	volatile unsigned int cr[4];       /* Timer Capture registers */
+	volatile unsigned int emr;         /* Timer External match reg */
+	volatile unsigned int rsvd2[12];   /* Reserved */
+	volatile unsigned int ctcr;        /* Timer Count control reg */
 } TIMER_CNTR_REGS_T;
 
 /**********************************************************************
-* ir register definitions
-* Write a '1' to clear interrupt, reading a '1' indicates active int
-**********************************************************************/
+ * ir register definitions
+ * Write a '1' to clear interrupt, reading a '1' indicates active int
+ **********************************************************************/
 /* Macro for getting a timer match interrupt bit */
 #define TIMER_CNTR_MTCH_BIT(n)     (1 << ((n) & 0x3))
 
@@ -714,8 +714,8 @@ typedef struct
 #define TIMER_CNTR_CAPT_BIT(n)     (1 << (4 + ((n) & 0x3)))
 
 /**********************************************************************
-* tcr register definitions
-**********************************************************************/
+ * tcr register definitions
+ **********************************************************************/
 /* Timer/counter enable bit */
 #define TIMER_CNTR_TCR_EN          0x1
 
@@ -723,8 +723,8 @@ typedef struct
 #define TIMER_CNTR_TCR_RESET       0x2
 
 /**********************************************************************
-* mcr register definitions
-**********************************************************************/
+ * mcr register definitions
+ **********************************************************************/
 /* Bit location for interrupt on MRx match, n = 0 to 3 */
 #define TIMER_CNTR_MCR_MTCH(n)     (0x1 << ((n) * 3))
 
@@ -735,8 +735,8 @@ typedef struct
 #define TIMER_CNTR_MCR_STOP(n)     (0x1 << (((n) * 3) + 2))
 
 /**********************************************************************
-* ccr register definitions
-**********************************************************************/
+ * ccr register definitions
+ **********************************************************************/
 /* Bit location for CAP.n on CRx rising edge, n = 0 to 3 */
 #define TIMER_CNTR_CCR_CAPNRE(n)   (0x1 << ((n) * 3))
 
@@ -747,8 +747,8 @@ typedef struct
 #define TIMER_CNTR_CCR_CAPNI(n)    (0x1 << (((n) * 3) + 2))
 
 /**********************************************************************
-* emr register definitions
-**********************************************************************/
+ * emr register definitions
+ **********************************************************************/
 /* Bit location for output state change of MAT.n when external match
    happens, n = 0 to 3 */
 #define TIMER_CNTR_EMR_DRIVE(n)    (1 << (n))
@@ -769,8 +769,8 @@ typedef struct
 #define TIMER_CNTR_EMR_EMC_MASK(n) (0x3 << (4 + ((n) * 2)))
 
 /**********************************************************************
-* ctcr register definitions
-**********************************************************************/
+ * ctcr register definitions
+ **********************************************************************/
 /* Mask to get the Counter/timer mode bits */
 #define TIMER_CNTR_CTCR_MODE_MASK  0x3
 
@@ -808,39 +808,39 @@ typedef struct
 /* WDT module register structures */
 typedef struct
 {
-  volatile unsigned int wdtim_int;      /* WDT interrupt status register */
-  volatile unsigned int wdtim_ctrl;     /* WDT control register */
-  volatile unsigned int wdtim_counter;  /* WDT counter value register */
-  volatile unsigned int wdtim_mctrl;    /* WDT match control register */
-  volatile unsigned int wdtim_match0;   /* WDT match 0 register */
-  volatile unsigned int wdtim_emr;      /* WDT external match control reg */
-  volatile unsigned int wdtim_pulse;    /* WDT reset pulse length register */
-  volatile unsigned int wdtim_res;      /* WDT reset source register */
+	volatile unsigned int wdtim_int;      /* WDT interrupt status register */
+	volatile unsigned int wdtim_ctrl;     /* WDT control register */
+	volatile unsigned int wdtim_counter;  /* WDT counter value register */
+	volatile unsigned int wdtim_mctrl;    /* WDT match control register */
+	volatile unsigned int wdtim_match0;   /* WDT match 0 register */
+	volatile unsigned int wdtim_emr;      /* WDT external match control reg */
+	volatile unsigned int wdtim_pulse;    /* WDT reset pulse length register */
+	volatile unsigned int wdtim_res;      /* WDT reset source register */
 } WDT_REGS_T;
 
 /**********************************************************************
-* wdtim_emr register definitions
-**********************************************************************/
+ * wdtim_emr register definitions
+ **********************************************************************/
 /* Interrupt flag for MATCH 0 interrupt */
 #define WDT_MATCH_CTRL           _BIT(5)
 
 
 /**********************************************************************
-* wdtim_int register definitions
-**********************************************************************/
+ * wdtim_int register definitions
+ **********************************************************************/
 /* Interrupt flag for MATCH 0 interrupt */
 #define WDT_MATCH_INT           _BIT(0)
 
 /**********************************************************************
-* wdtim_ctrl register definitions
-**********************************************************************/
+ * wdtim_ctrl register definitions
+ **********************************************************************/
 #define WDT_COUNT_ENAB          _BIT(0) /* Timer Counter enable */
 #define WDT_RESET_COUNT         _BIT(1) /* Timer Counter reset */
 #define WDT_PAUSE_EN            _BIT(2) /* Timer Cntr stopped in debug*/
 
 /**********************************************************************
-* wdtim_mctrl register definitions
-**********************************************************************/
+ * wdtim_mctrl register definitions
+ **********************************************************************/
 #define WDT_MR0_INT             _BIT(0) /* Enable WDT int on MR0 */
 #define WDT_RESET_COUNT0        _BIT(1) /* Enable WDT reset on MR0 */
 #define WDT_STOP_COUNT0         _BIT(2) /* Enable WDT stop on MR0 */
@@ -857,33 +857,33 @@ typedef struct
 /* SLC NAND controller module register structures */
 typedef struct
 {
-  volatile unsigned int slc_data;      /* SLC NAND data reg */
-  volatile unsigned int slc_addr;      /* SLC NAND address register */
-  volatile unsigned int slc_cmd;       /* SLC NAND command reg */
-  volatile unsigned int slc_stop;      /* SLC NAND stop register */
-  volatile unsigned int slc_ctrl;      /* SLC NAND control reg */
-  volatile unsigned int slc_cfg;       /* SLC NAND config register */
-  volatile unsigned int slc_stat;      /* SLC NAND status register */
-  volatile unsigned int slc_int_stat;  /* SLC NAND int status register */
-  volatile unsigned int slc_ien;       /* SLC NAND int enable register */
-  volatile unsigned int slc_isr;       /* SLC NAND int set register */
-  volatile unsigned int slc_icr;       /* SLC NAND int clear register */
-  volatile unsigned int slc_tac;       /* SLC NAND timing register */
-  volatile unsigned int slc_tc;        /* SLC NAND transfer count reg */
-  volatile unsigned int slc_ecc;       /* SLC NAND parity register */
-  volatile unsigned int slc_dma_data;  /* SLC NAND DMA data register */
+	volatile unsigned int slc_data;      /* SLC NAND data reg */
+	volatile unsigned int slc_addr;      /* SLC NAND address register */
+	volatile unsigned int slc_cmd;       /* SLC NAND command reg */
+	volatile unsigned int slc_stop;      /* SLC NAND stop register */
+	volatile unsigned int slc_ctrl;      /* SLC NAND control reg */
+	volatile unsigned int slc_cfg;       /* SLC NAND config register */
+	volatile unsigned int slc_stat;      /* SLC NAND status register */
+	volatile unsigned int slc_int_stat;  /* SLC NAND int status register */
+	volatile unsigned int slc_ien;       /* SLC NAND int enable register */
+	volatile unsigned int slc_isr;       /* SLC NAND int set register */
+	volatile unsigned int slc_icr;       /* SLC NAND int clear register */
+	volatile unsigned int slc_tac;       /* SLC NAND timing register */
+	volatile unsigned int slc_tc;        /* SLC NAND transfer count reg */
+	volatile unsigned int slc_ecc;       /* SLC NAND parity register */
+	volatile unsigned int slc_dma_data;  /* SLC NAND DMA data register */
 } SLCNAND_REGS_T;
 
 /**********************************************************************
-* slc_ctrl register definitions
-**********************************************************************/
+ * slc_ctrl register definitions
+ **********************************************************************/
 #define SLCCTRL_SW_RESET    _BIT(2) /* Reset the NAND controller bit */
 #define SLCCTRL_ECC_CLEAR   _BIT(1) /* Reset ECC bit */
 #define SLCCTRL_DMA_START   _BIT(0) /* Start DMA channel bit */
 
 /**********************************************************************
-* slc_cfg register definitions
-**********************************************************************/
+ * slc_cfg register definitions
+ **********************************************************************/
 #define SLCCFG_CE_LOW       _BIT(5) /* Force CE low bit */
 #define SLCCFG_DMA_ECC      _BIT(4) /* Enable DMA ECC bit */
 #define SLCCFG_ECC_EN       _BIT(3) /* ECC enable bit */
@@ -892,21 +892,21 @@ typedef struct
 #define SLCCFG_WIDTH        _BIT(0) /* External device width, 0=8bit */
 
 /**********************************************************************
-* slc_stat register definitions
-**********************************************************************/
+ * slc_stat register definitions
+ **********************************************************************/
 #define SLCSTAT_DMA_FIFO    _BIT(2) /* DMA FIFO has data bit */
 #define SLCSTAT_SLC_FIFO    _BIT(1) /* SLC FIFO has data bit */
 #define SLCSTAT_NAND_READY  _BIT(0) /* NAND device is ready bit */
 
 /**********************************************************************
-* slc_int_stat, slc_ien, slc_isr, and slc_icr register definitions
-**********************************************************************/
+ * slc_int_stat, slc_ien, slc_isr, and slc_icr register definitions
+ **********************************************************************/
 #define SLCSTAT_INT_TC      _BIT(1) /* Transfer count bit */
 #define SLCSTAT_INT_RDY_EN  _BIT(0) /* Ready interrupt bit */
 
 /**********************************************************************
-* slc_tac register definitions
-**********************************************************************/
+ * slc_tac register definitions
+ **********************************************************************/
 /* Clock setting for RDY write sample wait time in 2*n clocks */
 #define SLCTAC_WDR(n)       (((n) & 0xF) << 28)
 /* Write pulse width in clocks cycles, 1 to 16 clocks */
@@ -938,86 +938,86 @@ typedef struct
 
 
 /**********************************************************************
-* Ethernet MAC controller register structures
-**********************************************************************/
+ * Ethernet MAC controller register structures
+ **********************************************************************/
 
 /* Ethernet MAC controller module register structures */
 typedef struct
 {
-  /* MAC registers */
-  volatile unsigned long mac1;
-  volatile unsigned long mac2;
-  volatile unsigned long ipgt;
-  volatile unsigned long ipgr;
-  volatile unsigned long clrt;
-  volatile unsigned long maxf;
-  volatile unsigned long supp;
-  volatile unsigned long test;
-  volatile unsigned long mcfg;
-  volatile unsigned long mcmd;
-  volatile unsigned long madr;
-  volatile unsigned long mwtd;
-  volatile unsigned long mrdd;
-  volatile unsigned long mind;
-  volatile unsigned long reserved1 [2];
-  volatile unsigned long sa [3];
-  volatile unsigned long reserved2 [45];
-  /* Control registers */
-  volatile unsigned long command;
-  volatile unsigned long status;
-  volatile unsigned long rxdescriptor;
-  volatile unsigned long rxstatus;
-  volatile unsigned long rxdescriptornumber;
-  volatile unsigned long rxproduceindex;
-  volatile unsigned long rxconsumeindex;
-  volatile unsigned long txdescriptor;
-  volatile unsigned long txstatus;
-  volatile unsigned long txdescriptornumber;
-  volatile unsigned long txproduceindex;
-  volatile unsigned long txconsumeindex;
-  volatile unsigned long reserved3 [10];
-  volatile unsigned long tsv0;
-  volatile unsigned long tsv1;
-  volatile unsigned long rsv;
-  volatile unsigned long reserved4 [3];
-  volatile unsigned long flowcontrolcounter;
-  volatile unsigned long flowcontrolstatus;
-  volatile unsigned long reserved5 [34];
-  /* RX filter registers */
-  volatile unsigned long rxfliterctrl;
-  volatile unsigned long rxfilterwolstatus;
-  volatile unsigned long rxfilterwolclear;
-  volatile unsigned long reserved6;
-  volatile unsigned long hashfilterL;
-  volatile unsigned long hashfilterh;
-  volatile unsigned long reserved7 [882];
-  /* Module control registers */
-  volatile unsigned long intstatus;
-  volatile unsigned long intenable;
-  volatile unsigned long intclear;
-  volatile unsigned long Intset;
-  volatile unsigned long reserved8;
-  volatile unsigned long powerdown;
-  volatile unsigned long reserved9;
+	/* MAC registers */
+	volatile unsigned long mac1;
+	volatile unsigned long mac2;
+	volatile unsigned long ipgt;
+	volatile unsigned long ipgr;
+	volatile unsigned long clrt;
+	volatile unsigned long maxf;
+	volatile unsigned long supp;
+	volatile unsigned long test;
+	volatile unsigned long mcfg;
+	volatile unsigned long mcmd;
+	volatile unsigned long madr;
+	volatile unsigned long mwtd;
+	volatile unsigned long mrdd;
+	volatile unsigned long mind;
+	volatile unsigned long reserved1 [2];
+	volatile unsigned long sa [3];
+	volatile unsigned long reserved2 [45];
+	/* Control registers */
+	volatile unsigned long command;
+	volatile unsigned long status;
+	volatile unsigned long rxdescriptor;
+	volatile unsigned long rxstatus;
+	volatile unsigned long rxdescriptornumber;
+	volatile unsigned long rxproduceindex;
+	volatile unsigned long rxconsumeindex;
+	volatile unsigned long txdescriptor;
+	volatile unsigned long txstatus;
+	volatile unsigned long txdescriptornumber;
+	volatile unsigned long txproduceindex;
+	volatile unsigned long txconsumeindex;
+	volatile unsigned long reserved3 [10];
+	volatile unsigned long tsv0;
+	volatile unsigned long tsv1;
+	volatile unsigned long rsv;
+	volatile unsigned long reserved4 [3];
+	volatile unsigned long flowcontrolcounter;
+	volatile unsigned long flowcontrolstatus;
+	volatile unsigned long reserved5 [34];
+	/* RX filter registers */
+	volatile unsigned long rxfliterctrl;
+	volatile unsigned long rxfilterwolstatus;
+	volatile unsigned long rxfilterwolclear;
+	volatile unsigned long reserved6;
+	volatile unsigned long hashfilterL;
+	volatile unsigned long hashfilterh;
+	volatile unsigned long reserved7 [882];
+	/* Module control registers */
+	volatile unsigned long intstatus;
+	volatile unsigned long intenable;
+	volatile unsigned long intclear;
+	volatile unsigned long Intset;
+	volatile unsigned long reserved8;
+	volatile unsigned long powerdown;
+	volatile unsigned long reserved9;
 } ETHERNET_REGS_T;
 
 /* Structure of a TX/RX descriptor */
 typedef struct
 {
-  volatile unsigned long packet;
-  volatile unsigned long control;
+	volatile unsigned long packet;
+	volatile unsigned long control;
 } TXRX_DESC_T;
 
 /* Structure of a RX status entry */
 typedef struct
 {
-  volatile unsigned long statusinfo;
-  volatile unsigned long statushashcrc;
+	volatile unsigned long statusinfo;
+	volatile unsigned long statushashcrc;
 } RX_STATUS_T;
 
 /**********************************************************************
-* mac1 register definitions
-**********************************************************************/
+ * mac1 register definitions
+ **********************************************************************/
 /* Set this to allow receive frames to be received. Internally the
    MAC synchronize this control bit to the incoming receive stream */
 #define MAC1_RECV_ENABLE               _BIT(0)
@@ -1054,8 +1054,8 @@ typedef struct
 #define MAC1_SOFT_RESET                _BIT(15)
 
 /**********************************************************************
-* mac2 register definitions
-**********************************************************************/
+ * mac2 register definitions
+ **********************************************************************/
 /* When enabled (set to 1), the MAC operates in Full-Duplex mode.
    When disabled the MAC operates in Half-Duplex mode */
 #define MAC2_FULL_DUPLEX               _BIT(0)
@@ -1089,7 +1089,7 @@ typedef struct
    following the source address with 0x8100 (VLAN Protocol ID) and
    pad accordingly. Table 14273 - Pad Operation provides a description
    of the pad function based on the configuration of this register.
-   Note: This bit is ignored if PAD / CRC ENABLE is cleared */
+Note: This bit is ignored if PAD / CRC ENABLE is cleared */
 #define MAC2_AUTO_DETECT_PAD_ENABLE    _BIT(7)
 /* When enabled (set to 1), the MAC will verify the content of the
    preamble to ensure it contains 0x55 and is error-free. A packet
@@ -1115,8 +1115,8 @@ typedef struct
 #define MAC2_EXCESS_DEFER              _BIT(14)
 
 /**********************************************************************
-* ipgt register definitions
-**********************************************************************/
+ * ipgt register definitions
+ **********************************************************************/
 /* This is a programmable field representing the nibble time offset
    of the minimum possible period between the end of any transmitted
    packet to the beginning of the next. In Full-Duplex mode, the
@@ -1130,8 +1130,8 @@ typedef struct
 #define IPGT_LOAD(n)                   ((n) & 0x7F)
 
 /**********************************************************************
-* ipgr register definitions
-**********************************************************************/
+ * ipgr register definitions
+ **********************************************************************/
 /* This is a programmable field representing the Non-Back-to-Back
    Inter-Packet-Gap. The recommended value is 0x12 (18d), which
    represents the minimum IPG of 960 ns (in 100 Mbps mode) or 9.6 ?s
@@ -1147,8 +1147,8 @@ typedef struct
 #define IPGR_LOAD_PART1(n)             (((n) & 0x7F) << 8)
 
 /**********************************************************************
-* clrt register definitions
-**********************************************************************/
+ * clrt register definitions
+ **********************************************************************/
 /* This is a programmable field specifying the number of
    retransmission attempts following a collision before aborting the
    packet due to excessive collisions. The Standard specifies the
@@ -1161,8 +1161,8 @@ typedef struct
 #define CLRT_LOAD_COLLISION_WINDOW(n)  (((n) & 0x3F) << 8)
 
 /**********************************************************************
-* maxf register definitions
-**********************************************************************/
+ * maxf register definitions
+ **********************************************************************/
 /* This field resets to the value 0x0600, which represents a maximum
    receive frame of 1536 octets. An untagged maximum size Ethernet
    frame is 1518 octets. A tagged frame adds four octets for a total
@@ -1171,8 +1171,8 @@ typedef struct
 #define MAXF_LOAD_MAX_FRAME_LEN(n)     ((n) & 0xFFFF)
 
 /**********************************************************************
-* supp register definitions
-**********************************************************************/
+ * supp register definitions
+ **********************************************************************/
 /* This bit configures the Reduced MII logic for the current operating
    speed. When set, 100 Mbps mode is selected. When cleared, 10 Mbps
    mode is selected */
@@ -1181,8 +1181,8 @@ typedef struct
 #define SUPP_RESET_RMII                _BIT(11)
 
 /**********************************************************************
-* test register definitions
-**********************************************************************/
+ * test register definitions
+ **********************************************************************/
 /* This bit reduces the effective PAUSE quanta from 64 byte-times to
    1 byte-time. */
 #define TEST_SHORTCUT_PAUSE_QUANTA     _BIT(0)
@@ -1197,8 +1197,8 @@ typedef struct
 #define TEST_BACKPRESSURE              _BIT(2)
 
 /**********************************************************************
-* mcfg register definitions
-**********************************************************************/
+ * mcfg register definitions
+ **********************************************************************/
 /* Set this bit to cause the MII Management hardware to perform read
    cycles across a range of PHYs. When set, the MII Management
    hardware will perform read cycles from address 1 through the value
@@ -1228,8 +1228,8 @@ typedef struct
 #define MCFG_RESET_MII_MGMT            _BIT(15)
 
 /**********************************************************************
-* mcmd register definitions
-**********************************************************************/
+ * mcmd register definitions
+ **********************************************************************/
 /* This bit causes the MII Management hardware to perform a single
    Read cycle. The Read data is returned in Register MRDD (MII Mgmt
    Read Data). */
@@ -1239,8 +1239,8 @@ typedef struct
 #define MCMD_SCAN                      _BIT(1)
 
 /**********************************************************************
-* madr register definitions
-**********************************************************************/
+ * madr register definitions
+ **********************************************************************/
 /* This field represents the 5 bit Register Address field of Mgmt
    cycles. Up to 32 registers can be accessed. */
 #define MADR_REGISTER_ADDRESS(n)       ((n) & 0x1F)
@@ -1249,22 +1249,22 @@ typedef struct
 #define MADR_PHY_0ADDRESS(n)           (((n) & 0x1F) << 8)
 
 /**********************************************************************
-* mwtd register definitions
-**********************************************************************/
+ * mwtd register definitions
+ **********************************************************************/
 /* When written, an MII Mgmt write cycle is performed using the 16 bit
    data and the pre-configured PHY and Register addresses from the
    MII Mgmt Address register (MADR). */
 #define MWDT_WRITE(n)                  ((n) & 0xFFFF)
 
 /**********************************************************************
-* mrdd register definitions
-**********************************************************************/
+ * mrdd register definitions
+ **********************************************************************/
 /* Read mask for MUU read */
 #define MRDD_READ_MASK                 0xFFFF
 
 /**********************************************************************
-* mind register definitions
-**********************************************************************/
+ * mind register definitions
+ **********************************************************************/
 /* When 1 is returned - indicates MII Mgmt is currently performing
    an MII Mgmt Read or Write cycle. */
 #define MIND_BUSY                      _BIT(0)
@@ -1279,8 +1279,8 @@ typedef struct
 #define MIND_MII_LINK_FAIL             _BIT(3)
 
 /**********************************************************************
-* command register definitions
-**********************************************************************/
+ * command register definitions
+ **********************************************************************/
 /* Enable receive */
 #define COMMAND_RXENABLE               _BIT(0)
 /* Enable transmit */
@@ -1309,8 +1309,8 @@ typedef struct
 #define COMMAND_FULLDUPLEX             _BIT(10)
 
 /**********************************************************************
-* status register definitions
-**********************************************************************/
+ * status register definitions
+ **********************************************************************/
 /* If 1, the receive channel is active. If 0, the receive channel is
    inactive. */
 #define STATUS_RXACTIVE                _BIT(0)
@@ -1319,8 +1319,8 @@ typedef struct
 #define STATUS_TXACTIVE                _BIT(1)
 
 /**********************************************************************
-* tsv0 register definitions
-**********************************************************************/
+ * tsv0 register definitions
+ **********************************************************************/
 /* The attached CRC in the packet did not match the internally
    generated CRC. */
 #define TSV0_CRC_ERROR                 _BIT(0)
@@ -1365,8 +1365,8 @@ typedef struct
 #define TSV0_VLAN                      _BIT(31)
 
 /**********************************************************************
-* tsv1 register definitions
-**********************************************************************/
+ * tsv1 register definitions
+ **********************************************************************/
 /* Macro: The total number of bytes in the frame, not counting the
    collided bytes. */
 #define TSV1_TRANSMIT_BYTE_COUNT(n)    ((n) & 0xFFFF)
@@ -1376,8 +1376,8 @@ typedef struct
 #define TSV1_COLLISION_COUNT(n)        (((n) >> 16) & 0xF)
 
 /**********************************************************************
-* rsv register definitions
-**********************************************************************/
+ * rsv register definitions
+ **********************************************************************/
 /* Macro: Indicates length of received frame. */
 #define RSV_RECEIVED_BYTE_COUNT(n)     ((n) & 0xFFFF)
 /* Indicates that a packet was dropped. */
@@ -1421,8 +1421,8 @@ typedef struct
 #define RSV_VLAN                       _BIT(30)
 
 /**********************************************************************
-* flowcontrolcounter register definitions
-**********************************************************************/
+ * flowcontrolcounter register definitions
+ **********************************************************************/
 /* Macro: In full duplex mode the MirrorCounter specifies the number
    of cycles before re-issuing the Pause control frame. */
 #define FCCR_MIRRORCOUNTER(n)          ((n) & 0xFFFF)
@@ -1433,8 +1433,8 @@ typedef struct
 #define FCCR_PAUSETIMER(n)             (((n) >> 16) & 0xFFFF)
 
 /**********************************************************************
-* flowcontrolstatus register definitions
-**********************************************************************/
+ * flowcontrolstatus register definitions
+ **********************************************************************/
 /* Macro: In full duplex mode this register represents the current
    value of the datapaths mirror counter which counts up to
    the value specified by the MirrorCounter field in the
@@ -1444,9 +1444,9 @@ typedef struct
 #define FCCR_MIRRORCOUNTERCURRENT(n)   ((n) & 0xFFFF)
 
 /**********************************************************************
-* rxfliterctrl, rxfilterwolstatus, and rxfilterwolclear shared
-* register definitions
-**********************************************************************/
+ * rxfliterctrl, rxfilterwolstatus, and rxfilterwolclear shared
+ * register definitions
+ **********************************************************************/
 /* Unicast frame control */
 #define RXFLTRW_ACCEPTUNICAST          _BIT(0)
 /* Broadcase frame control. */
@@ -1461,8 +1461,8 @@ typedef struct
 #define RXFLTRW_ACCEPTPERFECT          _BIT(5)
 
 /**********************************************************************
-* rxfliterctrl register definitions
-**********************************************************************/
+ * rxfliterctrl register definitions
+ **********************************************************************/
 /* When set to 1, the result of the magic packet filter will
    generate a WoL interrupt when there is a match. */
 #define RXFLTRWSTS_MAGICPACKETENWOL    _BIT(12)
@@ -1472,16 +1472,16 @@ typedef struct
 #define RXFLTRWSTS_RXFILTERENWOL       _BIT(13)
 
 /**********************************************************************
-* rxfilterwolstatus register definitions
-**********************************************************************/
+ * rxfilterwolstatus register definitions
+ **********************************************************************/
 /* When the value is 1, the receive filter caused WoL. */
 #define RXFLTRWSTS_RXFILTERWOL         _BIT(7)
 /* When the value is 1, the magic packet filter caused WoL. */
 #define RXFLTRWSTS_MAGICPACKETWOL      _BIT(8)
 
 /**********************************************************************
-* rxfilterwolclear register definitions
-**********************************************************************/
+ * rxfilterwolclear register definitions
+ **********************************************************************/
 /* When a 1 is written to one of these bits (7 and/or 8),
    the corresponding status bit in the rxfilterwolstatus
    register is cleared. */
@@ -1489,9 +1489,9 @@ typedef struct
 #define RXFLTRWCLR_MAGICPACKETWOL      RXFLTRWSTS_MAGICPACKETWOL
 
 /**********************************************************************
-* intstatus, intenable, intclear, and Intset shared register
-* definitions
-**********************************************************************/
+ * intstatus, intenable, intclear, and Intset shared register
+ * definitions
+ **********************************************************************/
 /* Interrupt trigger on receive buffer overrun or descriptor underrun
    situations. */
 #define MACINT_RXOVERRUNINTEN          _BIT(0)
@@ -1527,8 +1527,8 @@ typedef struct
 #define MACINT_WAKEUPINTEN             _BIT(13)
 
 /**********************************************************************
-* powerdown register definitions
-**********************************************************************/
+ * powerdown register definitions
+ **********************************************************************/
 /* If true, all AHB accesses will return a read/write error,
    except accesses to the PowerDown register. */
 #define POWERDOWN_MACAHB               _BIT(31)
@@ -1552,16 +1552,16 @@ typedef struct
 /* SSP Module Register Structure */
 typedef struct
 {
-  volatile unsigned long cr0;     /* SSP control register 0 */
-  volatile unsigned long cr1;     /* SSP control register 1 */
-  volatile unsigned long data;    /* SSP data register */
-  volatile unsigned long sr;      /* SSP status register */
-  volatile unsigned long cpsr;    /* SSP clock prescale register */
-  volatile unsigned long imsc;    /* SSP interrupt mask register */
-  volatile unsigned long ris;     /* SSP raw interrupt status register */
-  volatile unsigned long mis;     /* SSP masked interrupt status register */
-  volatile unsigned long icr;     /* SSP interrupt clear register */
-  volatile unsigned long dmacr;   /* SSP DMA enable register */
+	volatile unsigned long cr0;     /* SSP control register 0 */
+	volatile unsigned long cr1;     /* SSP control register 1 */
+	volatile unsigned long data;    /* SSP data register */
+	volatile unsigned long sr;      /* SSP status register */
+	volatile unsigned long cpsr;    /* SSP clock prescale register */
+	volatile unsigned long imsc;    /* SSP interrupt mask register */
+	volatile unsigned long ris;     /* SSP raw interrupt status register */
+	volatile unsigned long mis;     /* SSP masked interrupt status register */
+	volatile unsigned long icr;     /* SSP interrupt clear register */
+	volatile unsigned long dmacr;   /* SSP DMA enable register */
 } SSP_REGS_T;
 
 /***********************************************************************
@@ -1666,66 +1666,66 @@ typedef struct
 
 
 /***********************************************************************
-* GPIO Module Register Structure
-**********************************************************************/
+ * GPIO Module Register Structure
+ **********************************************************************/
 
 /* GPIO Module Register Structure */
 typedef struct
 {
-  volatile unsigned long p3_inp_state;   /* Input pin state register */
-  volatile unsigned long p3_outp_set;    /* Output pin set register */
-  volatile unsigned long p3_outp_clr;    /* Output pin clear register */
-  volatile unsigned long p3_outp_state;  /* Output pin state register */
-  volatile unsigned long p2_dir_set;     /* GPIO direction set register */
-  volatile unsigned long p2_dir_clr;     /* GPIO direction clear register */
-  volatile unsigned long p2_dir_state;   /* GPIO direction state register */
-  volatile unsigned long p2_inp_state; /* SDRAM-Input pin state register*/
-  volatile unsigned long p2_outp_set;  /* SDRAM-Output pin set register */
-  volatile unsigned long p2_outp_clr;  /* SDRAM-Output pin clear register*/
-  volatile unsigned long p2_mux_set;     /* PIO mux control set register*/
-  volatile unsigned long p2_mux_clr;     /* PIO mux control clear register*/
-  volatile unsigned long p2_mux_state;   /* PIO mux state register */
-  volatile unsigned long reserved1 [3];
-  volatile unsigned long p0_inp_state;    /* P0 GPIOs pin read register */
-  volatile unsigned long p0_outp_set;    /* P0 GPIOs output set register */
-  volatile unsigned long p0_outp_clr;    /* P0 GPIOs output clear register */
-  volatile unsigned long p0_outp_state;  /* P0 GPIOs output state register */
-  volatile unsigned long p0_dir_set;     /* P0 GPIOs direction set reg */
-  volatile unsigned long p0_dir_clr;     /* P0 GPIOs direction clear reg */
-  volatile unsigned long p0_dir_state;   /* P0 GPIOs direction state reg */
-  volatile unsigned long reserved2;
-  volatile unsigned long p1_inp_state;    /* P1 GPIOs pin read register */
-  volatile unsigned long p1_outp_set;    /* P1 GPIOs output set register */
-  volatile unsigned long p1_outp_clr;    /* P1 GPIOs output clear register */
-  volatile unsigned long p1_outp_state;  /* P1 GPIOs output state register */
-  volatile unsigned long p1_dir_set;     /* P1 GPIOs direction set reg */
-  volatile unsigned long p1_dir_clr;     /* P1 GPIOs direction clear reg */
-  volatile unsigned long p1_dir_state;   /* P1 GPIOs direction state reg */
-  volatile unsigned long reserved3;
-  volatile unsigned long reserved4 [32];
-  volatile unsigned long p_mux_set;     /* PIO mux2 control set register*/
-  volatile unsigned long p_mux_clr;     /* PIO mux2 control clear register*/
-  volatile unsigned long p_mux_state;   /* PIO mux2 state register */
-  volatile unsigned long reserved5;
-  volatile unsigned long p3_mux_set;     /* PIO mux3 control set register*/
-  volatile unsigned long p3_mux_clr;     /* PIO mux3 control clear register*/
-  volatile unsigned long p3_mux_state;   /* PIO mux3 state register */
-  volatile unsigned long reserved6;
-  volatile unsigned long p0_mux_set;       /* P0 mux control set register*/
-  volatile unsigned long p0_mux_clr;       /* P0 mux control clear register*/
-  volatile unsigned long p0_mux_state;     /* P0 mux state register */
-  volatile unsigned long reserved7;
-  volatile unsigned long p1_mux_set;       /* P1 mux control set register*/
-  volatile unsigned long p1_mux_clr;       /* P1 mux control clear register*/
-  volatile unsigned long p1_mux_state;     /* P1 mux state register */
+	volatile unsigned long p3_inp_state;   /* Input pin state register */
+	volatile unsigned long p3_outp_set;    /* Output pin set register */
+	volatile unsigned long p3_outp_clr;    /* Output pin clear register */
+	volatile unsigned long p3_outp_state;  /* Output pin state register */
+	volatile unsigned long p2_dir_set;     /* GPIO direction set register */
+	volatile unsigned long p2_dir_clr;     /* GPIO direction clear register */
+	volatile unsigned long p2_dir_state;   /* GPIO direction state register */
+	volatile unsigned long p2_inp_state; /* SDRAM-Input pin state register*/
+	volatile unsigned long p2_outp_set;  /* SDRAM-Output pin set register */
+	volatile unsigned long p2_outp_clr;  /* SDRAM-Output pin clear register*/
+	volatile unsigned long p2_mux_set;     /* PIO mux control set register*/
+	volatile unsigned long p2_mux_clr;     /* PIO mux control clear register*/
+	volatile unsigned long p2_mux_state;   /* PIO mux state register */
+	volatile unsigned long reserved1 [3];
+	volatile unsigned long p0_inp_state;    /* P0 GPIOs pin read register */
+	volatile unsigned long p0_outp_set;    /* P0 GPIOs output set register */
+	volatile unsigned long p0_outp_clr;    /* P0 GPIOs output clear register */
+	volatile unsigned long p0_outp_state;  /* P0 GPIOs output state register */
+	volatile unsigned long p0_dir_set;     /* P0 GPIOs direction set reg */
+	volatile unsigned long p0_dir_clr;     /* P0 GPIOs direction clear reg */
+	volatile unsigned long p0_dir_state;   /* P0 GPIOs direction state reg */
+	volatile unsigned long reserved2;
+	volatile unsigned long p1_inp_state;    /* P1 GPIOs pin read register */
+	volatile unsigned long p1_outp_set;    /* P1 GPIOs output set register */
+	volatile unsigned long p1_outp_clr;    /* P1 GPIOs output clear register */
+	volatile unsigned long p1_outp_state;  /* P1 GPIOs output state register */
+	volatile unsigned long p1_dir_set;     /* P1 GPIOs direction set reg */
+	volatile unsigned long p1_dir_clr;     /* P1 GPIOs direction clear reg */
+	volatile unsigned long p1_dir_state;   /* P1 GPIOs direction state reg */
+	volatile unsigned long reserved3;
+	volatile unsigned long reserved4 [32];
+	volatile unsigned long p_mux_set;     /* PIO mux2 control set register*/
+	volatile unsigned long p_mux_clr;     /* PIO mux2 control clear register*/
+	volatile unsigned long p_mux_state;   /* PIO mux2 state register */
+	volatile unsigned long reserved5;
+	volatile unsigned long p3_mux_set;     /* PIO mux3 control set register*/
+	volatile unsigned long p3_mux_clr;     /* PIO mux3 control clear register*/
+	volatile unsigned long p3_mux_state;   /* PIO mux3 state register */
+	volatile unsigned long reserved6;
+	volatile unsigned long p0_mux_set;       /* P0 mux control set register*/
+	volatile unsigned long p0_mux_clr;       /* P0 mux control clear register*/
+	volatile unsigned long p0_mux_state;     /* P0 mux state register */
+	volatile unsigned long reserved7;
+	volatile unsigned long p1_mux_set;       /* P1 mux control set register*/
+	volatile unsigned long p1_mux_clr;       /* P1 mux control clear register*/
+	volatile unsigned long p1_mux_state;     /* P1 mux state register */
 } GPIO_REGS_T;
 
 /* For direction registers, a '1' is an output */
 #define GPIO_DIR_OUT          0x1
 
 /***********************************************************************
-* Input Pin State Register defines
-**********************************************************************/
+ * Input Pin State Register defines
+ **********************************************************************/
 /* Input state of GPI_pin. Where pin = 0-9 */
 #define INP_STATE_GPI_00	  _BIT(0)
 #define INP_STATE_GPI_01	  _BIT(1)
@@ -1757,34 +1757,34 @@ typedef struct
 #define INP_STATE_GPI_28_U3RI _BIT(28)
 
 /***********************************************************************
-* p3_outp_set, p3_outp_clr, and p3_outp_state register defines
-**********************************************************************/
+ * p3_outp_set, p3_outp_clr, and p3_outp_state register defines
+ **********************************************************************/
 /* Following macro is used to determine bit position for GPO pin in
-*  P3_OUTP_SET, P3_OUTP_CLR & P3_OUTP_STATE registers.
-*  Where pin = {0-23}
-*/
+ *  P3_OUTP_SET, P3_OUTP_CLR & P3_OUTP_STATE registers.
+ *  Where pin = {0-23}
+ */
 #define OUTP_STATE_GPO(pin)	  _BIT((pin))
 
 /* Following macro is used to determine bit position for GPIO pin in
-*  PIO_OUTP_SET, P3_OUTP_CLR & P3_OUTP_STATE registers.
-*  Where pin = {0-5}
-*/
+ *  PIO_OUTP_SET, P3_OUTP_CLR & P3_OUTP_STATE registers.
+ *  Where pin = {0-5}
+ */
 #define OUTP_STATE_GPIO(pin)  _BIT(((pin) + 25))
 
 /***********************************************************************
-* GPIO Direction Register defines
-**********************************************************************/
+ * GPIO Direction Register defines
+ **********************************************************************/
 /* Following macro is used to determine bit position for GPIO pin in
-*  P2_DIR_SET, P2_DIR_STATE & P2_DIR_CLR registers.
-*  Where pin = {0-5}
-*/
+ *  P2_DIR_SET, P2_DIR_STATE & P2_DIR_CLR registers.
+ *  Where pin = {0-5}
+ */
 #define PIO_DIR_GPIO(pin)	 _BIT(((pin) + 25))
 
 /* Following macro is used to determine bit position for RAM_D pin in
-*  P2_DIR_SET, P2_DIR_CLR, P2_DIR_STATE, P2_INP_STATE,
-*  P2_OUTP_SET, & P2_OUTP_CLR.
-*  Where pin = {19-31}
-*/
+ *  P2_DIR_SET, P2_DIR_CLR, P2_DIR_STATE, P2_INP_STATE,
+ *  P2_OUTP_SET, & P2_OUTP_CLR.
+ *  Where pin = {19-31}
+ */
 #define PIO_SDRAM_DIR_PIN(pin) _BIT(((pin) - 19))
 
 /* Macro for GPIO direction muxed with the high 16 bits of the SDRAM
@@ -1792,8 +1792,8 @@ typedef struct
 #define PIO_SDRAM_PIN_ALL    0x00001FFF
 
 /***********************************************************************
-* p_mux_set, p_mux_clr, p_mux_state register defines
-**********************************************************************/
+ * p_mux_set, p_mux_clr, p_mux_state register defines
+ **********************************************************************/
 /* Muxed PIO#0 pin state defines */
 #define P_I2STXSDA1_MAT31     _BIT(2)
 #define P_I2STXCLK1_MAT30     _BIT(3)
@@ -1813,8 +1813,8 @@ typedef struct
 #define P_MAT00_PWM31         _BIT(20)
 
 /***********************************************************************
-* p0_mux_set, p0_mux_clr, p0_mux_state register defines
-**********************************************************************/
+ * p0_mux_set, p0_mux_clr, p0_mux_state register defines
+ **********************************************************************/
 
 /* Following macro is used to determine bit position for a P0 GPIO pin
    used with the p0_xxx registers for pins P0_0 to P0_7*/
@@ -1832,8 +1832,8 @@ typedef struct
 #define P0_ALL						0xFF
 
 /***********************************************************************
-* p1_mux_set, p1_mux_clr, p1_mux_state register defines
-**********************************************************************/
+ * p1_mux_set, p1_mux_clr, p1_mux_state register defines
+ **********************************************************************/
 
 /* Following macro is used to determine bit position for a P1 GPIO pin
    used with the p1_xxx registers for pins P1_0 to P1_23*/
@@ -1846,8 +1846,8 @@ typedef struct
 #define GPIO  ((GPIO_REGS_T *)(GPIO_BASE))
 
 /***********************************************************************
-* p2_mux_set, p2_mux_clr, p2_mux_state register defines
-**********************************************************************/
+ * p2_mux_set, p2_mux_clr, p2_mux_state register defines
+ **********************************************************************/
 /* Muxed PIO#2 pin state defines */
 #define P2_GPIO05_SSEL0			_BIT(5)
 #define P2_GPIO04_SSEL1			_BIT(4)
@@ -1857,8 +1857,8 @@ typedef struct
 #define P2_GPIO02_KEYROW6		_BIT(0)
 
 /***********************************************************************
-* p3_mux_set, p3_mux_clr, p3_mux_state register defines
-**********************************************************************/
+ * p3_mux_set, p3_mux_clr, p3_mux_state register defines
+ **********************************************************************/
 /* Muxed PIO#3 pin states, first column is '0' state, second is '1' */
 #define P3_GPO2_MAT10          _BIT(2)
 #define P3_GPO6_PWM43          _BIT(6)
@@ -1873,27 +1873,27 @@ typedef struct
 
 typedef struct
 {
-  volatile unsigned int baud_rate;
-  volatile unsigned int cts_en;
-  volatile unsigned int cts_inv;
-  volatile unsigned int rts_en;
-  volatile unsigned int rts_inv;
+	volatile unsigned int baud_rate;
+	volatile unsigned int cts_en;
+	volatile unsigned int cts_inv;
+	volatile unsigned int rts_en;
+	volatile unsigned int rts_inv;
 } HSUART_CONTROL_T;
 
 typedef struct
 {
-  volatile unsigned int txrx_fifo;
-  volatile unsigned int level;
-  volatile unsigned int iir;
-  volatile unsigned int ctrl;
-  volatile unsigned int rate;
+	volatile unsigned int txrx_fifo;
+	volatile unsigned int level;
+	volatile unsigned int iir;
+	volatile unsigned int ctrl;
+	volatile unsigned int rate;
 } HSUART_REGS_T;
 
 typedef struct
 {
-  volatile unsigned int ctrl;
-  volatile unsigned int clkmode;
-  volatile unsigned int loop;
+	volatile unsigned int ctrl;
+	volatile unsigned int clkmode;
+	volatile unsigned int loop;
 } HSUART_CNTL_REGS_T;
 
 #define UART1 ((HSUART_REGS_T *)(HS_UART1_BASE))
@@ -1905,52 +1905,52 @@ typedef struct
 #define HS_UART7_BASE 0x4001C000
 
 /**********************************************************************
-* OTG I2C controller register structures
-**********************************************************************/
+ * OTG I2C controller register structures
+ **********************************************************************/
 
 /* OTG I2C controller module register structures */
 typedef struct
 {
-  volatile unsigned long otg_i2c_txrx;      /* OTG I2C Tx/Rx Data FIFO */
-  volatile unsigned long otg_i2c_stat;      /* OTG I2C Status Register */
-  volatile unsigned long otg_i2c_ctrl;      /* OTG I2C Control Register */
-  volatile unsigned long otg_i2c_clk_hi;    /* OTG I2C Clock Divider high */
-  volatile unsigned long otg_i2c_clk_lo;    /* OTG I2C Clock Divider low */
+	volatile unsigned long otg_i2c_txrx;      /* OTG I2C Tx/Rx Data FIFO */
+	volatile unsigned long otg_i2c_stat;      /* OTG I2C Status Register */
+	volatile unsigned long otg_i2c_ctrl;      /* OTG I2C Control Register */
+	volatile unsigned long otg_i2c_clk_hi;    /* OTG I2C Clock Divider high */
+	volatile unsigned long otg_i2c_clk_lo;    /* OTG I2C Clock Divider low */
 } OTGI2C_REGS_T;
 
 /**********************************************************************
-* OTG controller register structures
-**********************************************************************/
+ * OTG controller register structures
+ **********************************************************************/
 
 /* OTG controller module register structures */
 typedef struct
 {
-  volatile unsigned long reserved1[64];
-  volatile unsigned long otg_int_sts;      /* OTG int status register */
-  volatile unsigned long otg_int_enab;     /* OTG int enable register */
-  volatile unsigned long otg_int_set;      /* OTG int set register */
-  volatile unsigned long otg_int_clr;      /* OTG int clear register */
-  volatile unsigned long otg_sts_ctrl;     /* OTG status/control register */
-  volatile unsigned long otg_timer;        /* OTG timer register */
-  volatile unsigned long reserved2[122];
-  OTGI2C_REGS_T otg_i2c;
-  volatile unsigned long reserved3[824];
-  volatile unsigned long otg_clk_ctrl;      /* OTG clock control reg */
-  volatile unsigned long otg_clk_sts;       /* OTG clock status reg */
+	volatile unsigned long reserved1[64];
+	volatile unsigned long otg_int_sts;      /* OTG int status register */
+	volatile unsigned long otg_int_enab;     /* OTG int enable register */
+	volatile unsigned long otg_int_set;      /* OTG int set register */
+	volatile unsigned long otg_int_clr;      /* OTG int clear register */
+	volatile unsigned long otg_sts_ctrl;     /* OTG status/control register */
+	volatile unsigned long otg_timer;        /* OTG timer register */
+	volatile unsigned long reserved2[122];
+	OTGI2C_REGS_T otg_i2c;
+	volatile unsigned long reserved3[824];
+	volatile unsigned long otg_clk_ctrl;      /* OTG clock control reg */
+	volatile unsigned long otg_clk_sts;       /* OTG clock status reg */
 } OTG_REGS_T;
 
 /**********************************************************************
-* otg_int_sts, otg_int_enab, otg_int_set, and otg_int_clr register
-* definitions
-**********************************************************************/
+ * otg_int_sts, otg_int_enab, otg_int_set, and otg_int_clr register
+ * definitions
+ **********************************************************************/
 #define OTG_INT_HNP_SUCC _BIT(3)       /* HNP success */
 #define OTG_INT_HNP_FAIL _BIT(2)       /* HNP failure */
 #define OTG_INT_REM_PLLUP _BIT(1)      /* Remove pullup interrupt */
 #define OTG_INT_TIMER _BIT(0)          /* Timer interrupt */
 
 /**********************************************************************
-* otg_sts_ctrl register definitions
-**********************************************************************/
+ * otg_sts_ctrl register definitions
+ **********************************************************************/
 #define OTG_PLLUP_REMD _BIT(10)        /* Pullup removed */
 #define OTG_AB_HNP_TRK _BIT(9)         /* A to B HNP track */
 #define OTG_BA_HNP_TRK _BIT(8)         /* B to A HNP track */
@@ -1964,15 +1964,15 @@ typedef struct
 #define OTG_HOST_EN _BIT(0)            /* Enable host mode */
 
 /**********************************************************************
-* OTG I2C register definitions
-* The register definitions are exactly the same as "master only" base
-* I2C register settings. See the I2C header file for the register
-* bit descriptions for this peripheral.
-**********************************************************************/
+ * OTG I2C register definitions
+ * The register definitions are exactly the same as "master only" base
+ * I2C register settings. See the I2C header file for the register
+ * bit descriptions for this peripheral.
+ **********************************************************************/
 
 /**********************************************************************
-* otg_clk_ctrl and otg_clk_sts register definitions
-**********************************************************************/
+ * otg_clk_ctrl and otg_clk_sts register definitions
+ **********************************************************************/
 #define OTG_CLK_AHB_EN _BIT(4)         /* Enable AHB clock */
 #define OTG_CLK_OTG_EN _BIT(3)         /* Enable OTG clock */
 #define OTG_CLK_I2C_EN _BIT(2)         /* Enable I2C clock */
@@ -1986,19 +1986,19 @@ typedef struct
 
 
 /**********************************************************************
-* I2C controller register structures
-**********************************************************************/
+ * I2C controller register structures
+ **********************************************************************/
 
 
 /**********************************************************************
-* i2c_txrx register definitions
-**********************************************************************/
+ * i2c_txrx register definitions
+ **********************************************************************/
 #define I2C_START    _BIT(8)		/* generate a START before this B*/
 #define I2C_STOP     _BIT(9)		/* generate a STOP after this B */
 
 /**********************************************************************
-* i2c_stat register definitions
-**********************************************************************/
+ * i2c_stat register definitions
+ **********************************************************************/
 #define I2C_TDI     _BIT(0)         /* Transaction Done Interrupt */
 #define I2C_AFI     _BIT(1)         /* Arbitration Failure Interrupt */
 #define I2C_NAI     _BIT(2)         /* No Acknowledge Interrupt */
@@ -2015,8 +2015,8 @@ typedef struct
 #define I2C_TFES    _BIT(13)        /* Slave Transmit FIFO Empty */
 
 /**********************************************************************
-* i2c_ctrl register definitions
-**********************************************************************/
+ * i2c_ctrl register definitions
+ **********************************************************************/
 #define I2C_TDIE    _BIT(0)         /* Transaction Done Int Enable */
 #define I2C_AFIE    _BIT(1)         /* Arbitration Failure Int Ena */
 #define I2C_NAIE    _BIT(2)         /* No Acknowledge Int Enable */

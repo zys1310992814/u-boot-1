@@ -204,27 +204,7 @@ int dram_init (void)
 	unsigned long sz = phyhwdesc.dramcfg & PHYHW_DRAM_SIZE_MASK;
 
 	gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
-
-	if (sz == PHYHW_DRAM_SIZE_16M)
-	{
-		/* 32M available */
-		gd->bd->bi_dram[0].size = 0x01000000; /* 16M */
-	}
-	else if (sz == PHYHW_DRAM_SIZE_32M)
-	{
-		/* 32M available */
-		gd->bd->bi_dram[0].size = 0x02000000; /* 32M */
-	}
-	else if (sz == PHYHW_DRAM_SIZE_64M)
-	{
-		/* 64M available */
-		gd->bd->bi_dram[0].size = 0x04000000; /* 64M */
-	}
-	else
-	{
-		/* 128M available */
-		gd->bd->bi_dram[0].size = 0x08000000; /* 128M */
-	}
+	gd->bd->bi_dram[0].size  = PHYS_SDRAM_SIZE;
 
 	return 0;
 }
