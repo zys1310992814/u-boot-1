@@ -56,7 +56,14 @@ char * env_name_spec = "Flash";
 
 extern uchar environment[];
 env_t *env_ptr = (env_t *)(&environment[0]);
+
+#ifdef CMD_SAVEENV
+/* static env_t *flash_addr = (env_t *)(&environment[0]);-broken on ARM-wd-*/
+static env_t *flash_addr = (env_t *)CONFIG_ENV_ADDR;
+#endif
+
 #else /* ! ENV_IS_EMBEDDED */
+
 env_t *env_ptr = (env_t *)CONFIG_ENV_ADDR;
 #ifdef CMD_SAVEENV
 static env_t *flash_addr = (env_t *)CONFIG_ENV_ADDR;
@@ -246,8 +253,6 @@ int  env_init(void)
 	}
 
 	gd->env_addr  = (ulong)&default_environment[0];
-	//gd->env_addr  = (ulong)CONFIG_ENV_ADDR;
-	//debug ( "gd->env_addr  = (ulong)CONFIG_ENV_ADDR; \n");
 	gd->env_valid = 0;
 	return (0);
 }

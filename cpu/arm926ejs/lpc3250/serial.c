@@ -31,18 +31,16 @@ DECLARE_GLOBAL_DATA_PTR;
  */
 int serial_abs(int v1, int v2)
 {
-  if (v1 > v2)
-  {
-    return v1 - v2;
-  }
-
-  return v2 - v1;
+	if (v1 > v2) {
+		return v1 - v2;
+	}
+	return v2 - v1;
 }
 
 /*
  * Find the best UART clock divider to get the desired port rate
  */
-void serial_getdiv(u32 baudrate,
+void serial_getdiv(unsigned int baudrate,
 			unsigned int *xdiv,
 			unsigned int *ydiv)
 {
@@ -156,17 +154,9 @@ int serial_init (void)
 	serial_setbrg();
 
 	/* Clear FIFOs and set FIFO level */
-	puregs->iir_fcr = (UART_FCR_RXFIFO_TL16 |
-		UART_FCR_TXFIFO_TL0 | UART_FCR_FIFO_CTRL |
-		UART_FCR_FIFO_EN | UART_FCR_TXFIFO_FLUSH |
-		UART_FCR_RXFIFO_FLUSH);
+	puregs->iir_fcr = (UART_FCR_TXFIFO_FLUSH | UART_FCR_RXFIFO_FLUSH);
 	tmp32 = puregs->iir_fcr;
 	tmp32 = puregs->lsr;
-
-	/* Use automatic clocking */
-//	tmp32 = UARTCNTL->clkmode & UART_CLKMODE_MASK(unum + 3);
-//	UARTCNTL->clkmode = tmp32 | UART_CLKMODE_LOAD(
-//        	UART_CLKMODE_AUTO, (unum + 3));  // TBD delete me
 
 	return 0;
 }
@@ -177,7 +167,11 @@ int serial_init (void)
 int serial_getc (void)
 {
 	/* Wait for a character from the UART */
-	while ((CFG_UART_SEL->lsr & UART_LSR_RDR) == 0);
+	while ((CFG_UART_SEL->lsr & UART_LSR_RDR) == 0) {
+#if defined NTS_WDG
+		NTS_WDG_RESET;
+#endif
+	}
 
 	return (int) (CFG_UART_SEL->dll_fifo & 0xFF);
 }
@@ -187,14 +181,17 @@ int serial_getc (void)
  */
 void serial_putc (const char c)
 {
+#if defined NTS_WDG
+	if ((c=='.')||(c=='#')) {
+		NTS_WDG_RESET;
+	}
+#endif
 	/* Wait for FIFO to become empty */
-	while ((CFG_UART_SEL->lsr & UART_LSR_THRE) == 0);
-
+	while ((CFG_UART_SEL->lsr & UART_LSR_TEMT) == 0);
 	CFG_UART_SEL->dll_fifo = (u32) c;
-
+	while ((CFG_UART_SEL->lsr & UART_LSR_TEMT) == 0);
 	/* If \n, also do \r */
-	if (c == '\n')
-	{
+	if (c == '\n') {
 		serial_putc ('\r');
 	}
 }
@@ -204,9 +201,11 @@ void serial_putc (const char c)
  */
 int serial_tstc (void)
 {
+#if defined NTS_WDG
+	NTS_WDG_RESET;
+#endif
 	/* Wait for a character from the UART */
-	if ((CFG_UART_SEL->lsr & UART_LSR_RDR) == 0)
-	{
+	if ((CFG_UART_SEL->lsr & UART_LSR_RDR) == 0) {
 		return 0;
 	}
 
@@ -218,9 +217,7 @@ int serial_tstc (void)
  */
 void serial_puts (const char *s)
 {
-	while (*s)
-	{
+	while (*s) {
 		serial_putc (*s++);
 	}
 }
-

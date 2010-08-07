@@ -1,7 +1,4 @@
 #
-# (C) Copyright 2002
-# Gary Jennejohn, DENX Software Engineering, <gj@denx.de>
-#
 # See file CREDITS for list of people who contributed to this
 # project.
 #
@@ -21,15 +18,17 @@
 # MA 02111-1307 USA
 #
 
-PLATFORM_RELFLAGS += -fno-strict-aliasing  -fno-common -ffixed-r8 \
-	-msoft-float
+#
+# 64 or 128 MB SDRAM @ 0x80000000
+#
+# Linux-Kernel is @ 0x80008000, entry 0x80008000
+# params @ 0x80000100
+# optionally with a ramdisk at 0x80300000
+#
+# we load ourself to 0x00000000 or 0x83FC0000
+#
+# download area is 0x80f00000
+#
 
-PLATFORM_CPPFLAGS += -march=armv5te
-# =========================================================================
-#
-# Supply options according to compiler version
-#
-# =========================================================================
-PLATFORM_CPPFLAGS +=$(call cc-option,-mapcs-32,-mabi=apcs-gnu)
-PLATFORM_CPPFLAGS +=$(call cc-option,-mno-thumb-interwork,)
-PLATFORM_RELFLAGS +=$(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,))
+TEXT_BASE = 0x83FC0000
+

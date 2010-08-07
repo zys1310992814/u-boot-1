@@ -142,11 +142,14 @@ int do_bootm_linux(int flag, int argc, char *argv[], bootm_headers_t *images)
 static void setup_start_tag (bd_t *bd)
 {
 	params = (struct tag *) bd->bi_boot_params;
+
 	params->hdr.tag = ATAG_CORE;
 	params->hdr.size = tag_size (tag_core);
+
 	params->u.core.flags = 0;
 	params->u.core.pagesize = 0;
 	params->u.core.rootdev = 0;
+
 	params = tag_next (params);
 }
 

@@ -27,6 +27,9 @@ LIB	= $(obj)libcommon.a
 
 AOBJS	=
 
+#
+COBJS-$(CONFIG_CMD_SPIFLASH) += cmd_spiflash.o
+
 # core
 COBJS-y += main.o
 COBJS-y += circbuf.o

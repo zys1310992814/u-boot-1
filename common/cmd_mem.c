@@ -40,6 +40,11 @@
 #define PRINTF(fmt,args...)
 #endif
 
+// little endian
+uchar jffs2_cleanmarker[12] = {
+	0x85, 0x19, 0x03, 0x20, 0x0c, 0x00, 0x00, 0x00,
+	0xB1, 0xB0, 0x1E, 0xE4};
+
 static int mod_mem(cmd_tbl_t *, int, int, int, char *[]);
 
 /* Display values from last command.
@@ -350,6 +355,83 @@ int do_mem_cmp (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 		ngood, size == 4 ? "word" : size == 2 ? "halfword" : "byte",
 		ngood == 1 ? "" : "s");
 	return rcode;
+}
+
+int do_cp_jffs2 ( cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
+{
+	ulong	addr, dest, count, bsize, tsize, i, jbegin, jend;
+
+	if (argc != 6) {
+		printf ("Usage:\n%s\n", cmdtp->usage);
+		return 1;
+	}
+
+	addr = simple_strtoul(argv[1], NULL, 16);
+	addr += base_address;
+
+	dest = simple_strtoul(argv[2], NULL, 16);
+	dest += base_address;
+
+	count = simple_strtoul(argv[3], NULL, 16);
+	bsize = simple_strtoul(argv[4], NULL, 16);
+	tsize = simple_strtoul(argv[5], NULL, 16);
+
+	if (count == 0) {
+		puts ("Zero length ???\n");
+		return 1;
+	}
+
+	if (bsize == 0) {
+		puts ("Zero block size ???\n");
+		return 1;
+	}
+
+	if (tsize == 0) {
+		puts ("Zero total size ???\n");
+		return 1;
+	}
+
+	/* check if we are copying to Flash */
+	if (addr2info(dest) != NULL) {
+		int rc;
+
+		puts ("Copy to Flash... \n");
+
+		rc = flash_write ((char *)addr, dest, count);
+		if (rc != 0) {
+			flash_perror (rc);
+			return (1);
+		}
+
+		puts ("Write image done\n");
+		
+		jbegin = count/bsize;
+		jend  = count%bsize;
+		jbegin = dest+jbegin*bsize;
+		if (jend !=0)
+			jbegin += bsize;
+		jend = dest+(tsize-1);
+
+		puts ("Copy to Flash... \n");
+		printf("1st CLEANMARKER location: 0x%08X\n", jbegin);
+
+		for (i=jbegin; i<jend; i+=bsize)
+		{
+			// printf("Write CLEANMARKER to 0x%08X\n", i);
+			rc = flash_write ((char *)jffs2_cleanmarker, i, 12);
+			if (rc != 0) {
+				flash_perror (rc);
+				return (1);
+			}
+			if ((jend-i)<=(bsize-1))
+				break;
+		}
+
+		printf("Last CLEANMARKER location: 0x%08X\n", i);
+		puts ("Write CLEANMARKER done\n");
+		return 0;
+	}
+	return 1;
 }
 
 int do_mem_cp ( cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
@@ -1193,6 +1275,12 @@ U_BOOT_CMD(
 	mw,	4,	1,	do_mem_mw,
 	"memory write (fill)",
 	"[.b, .w, .l] address value [count]\n	- write memory\n"
+);
+
+U_BOOT_CMD(
+	cpj,	6,	1,	do_cp_jffs2,
+	"cpj - cp.b jffs2 version, add CLEANMARKER\n",
+	"source target count block_size total_size\n    - copy memory\n"
 );
 
 U_BOOT_CMD(

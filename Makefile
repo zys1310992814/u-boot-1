@@ -23,7 +23,7 @@
 
 VERSION = 2009
 PATCHLEVEL = 03
-SUBLEVEL =
+SUBLEVEL = NTS3250
 EXTRAVERSION =
 ifneq "$(SUBLEVEL)" ""
 U_BOOT_VERSION = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
@@ -314,7 +314,7 @@ $(obj)u-boot.srec:	$(obj)u-boot
 		$(OBJCOPY) -O srec $< $@
 
 $(obj)u-boot.bin:	$(obj)u-boot
-		$(OBJCOPY) ${OBJCFLAGS} -O binary $< ../release/$@
+		$(OBJCOPY) ${OBJCFLAGS} -O binary $< $@
 
 $(obj)u-boot.ldr:	$(obj)u-boot
 		$(LDR) -T $(CONFIG_BFIN_CPU) -c $@ $< $(LDR_FLAGS)
@@ -2714,6 +2714,9 @@ at91sam9rlek_config	:	unconfig
 #########################################################################
 ## NXP ARM926EJ-S Systems
 #########################################################################
+
+nts3250_config	:	unconfig
+	@$(MKCONFIG) $(@:_config=) arm arm926ejs nts3250 NULL lpc3250
 
 phy3250_config	:	unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm926ejs phy3250 NULL lpc3250
