@@ -62,3 +62,5 @@ cscope.*
 /onenand_ipl/board/*/onenand*
 /onenand_ipl/board/*/*.S
 .svn
+2.log
+sync
