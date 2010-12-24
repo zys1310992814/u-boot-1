@@ -25,6 +25,7 @@ VERSION = 2009
 PATCHLEVEL = 03
 SUBLEVEL = NTS3250
 EXTRAVERSION =
+DEFAULT_CONFIG = nts3250_config
 ifneq "$(SUBLEVEL)" ""
 U_BOOT_VERSION = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
 else
@@ -472,12 +473,21 @@ sinclude $(obj)include/autoconf.mk.dep
 
 #########################################################################
 else	# !config.mk
+ifneq "$(DEFAULT_CONFIG)" ""
+all $(obj)u-boot.hex $(obj)u-boot.srec $(obj)u-boot.bin \
+$(obj)u-boot.img $(obj)u-boot.dis $(obj)u-boot \
+$(SUBDIRS) $(TIMESTAMP_FILE) $(VERSION_FILE) gdbtools updater env depend \
+dep tags ctags etags cscope $(obj)System.map:$(DEFAULT_CONFIG)
+	@echo "System not configured use default ${DEFAULT_CONFIG}" >&2
+	@$(MAKE) $@
+else
 all $(obj)u-boot.hex $(obj)u-boot.srec $(obj)u-boot.bin \
 $(obj)u-boot.img $(obj)u-boot.dis $(obj)u-boot \
 $(SUBDIRS) $(TIMESTAMP_FILE) $(VERSION_FILE) gdbtools updater env depend \
 dep tags ctags etags cscope $(obj)System.map:
 	@echo "System not configured - see README" >&2
 	@ exit 1
+endif
 endif	# config.mk
 
 .PHONY : CHANGELOG
