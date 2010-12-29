@@ -24,7 +24,7 @@
  * Skip low level init of MMU, SDRAM, muxing, etc. if u-boot is loaded
  * and executed from S1L
  */
-#define CFG_BOOT_USES1L
+//#define CFG_BOOT_USES1L
 #ifdef CFG_BOOT_USES1L
 #define CONFIG_SKIP_LOWLEVEL_INIT
 #endif

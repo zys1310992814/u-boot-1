@@ -51,6 +51,7 @@
 
 .globl _start
 _start:
+	.word 0x13579BD1 /* Nor Flash sign of NXP*/
 	b	reset
 	ldr	pc, _undefined_instruction
 	ldr	pc, _software_interrupt
@@ -139,58 +140,6 @@ reset:
 	 * we do sys-critical inits only at reboot,
 	 * not when booting from ram!
 	 */
-#ifndef CONFIG_SKIP_LOWLEVEL_INIT
-	bl	cpu_init_crit
-#endif
-
-#ifndef CONFIG_SKIP_RELOCATE_UBOOT
-relocate:				/* relocate U-Boot to RAM	    */
-	adr	r0, _start		/* r0 <- current position of code   */
-	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */
-	cmp     r0, r1                  /* don't reloc during debug         */
-	beq     stack_setup
-
-	ldr	r2, _armboot_start
-	ldr	r3, _bss_start
-	sub	r2, r3, r2		/* r2 <- size of armboot            */
-	add	r2, r0, r2		/* r2 <- source end address         */
-
-copy_loop:
-	ldmia	r0!, {r3-r10}		/* copy from source address [r0]    */
-	stmia	r1!, {r3-r10}		/* copy to   target address [r1]    */
-	cmp	r0, r2			/* until source end addreee [r2]    */
-	ble	copy_loop
-#endif	/* CONFIG_SKIP_RELOCATE_UBOOT */
-
-	/* Set up the stack						    */
-stack_setup:
-	ldr	r0, _TEXT_BASE		/* upper 128 KiB: relocated uboot   */
-	sub	r0, r0, #CONFIG_SYS_MALLOC_LEN	/* malloc area                      */
-	sub	r0, r0, #CONFIG_SYS_GBL_DATA_SIZE /* bdinfo                        */
-#ifdef CONFIG_USE_IRQ
-	sub	r0, r0, #(CONFIG_STACKSIZE_IRQ+CONFIG_STACKSIZE_FIQ)
-#endif
-	sub	sp, r0, #12		/* leave 3 words for abort-stack    */
-
-clear_bss:
-	ldr	r0, _bss_start		/* find start of bss segment        */
-	ldr	r1, _bss_end		/* stop here                        */
-	mov	r2, #0x00000000		/* clear                            */
-
-clbss_l:str	r2, [r0]		/* clear loop...                    */
-	add	r0, r0, #4
-	cmp	r0, r1
-	ble	clbss_l
-
-	bl coloured_LED_init
-	bl red_LED_on
-
-	ldr	pc, _start_armboot
-
-_start_armboot:
-	.word start_armboot
-
-
 /*
  *************************************************************************
  *
@@ -223,11 +172,55 @@ cpu_init_crit:
 	/*
 	 * Go setup Memory and board specific bits prior to relocation.
 	 */
-	mov	ip, lr		/* perserve link reg across call */
 	bl	lowlevel_init	/* go setup pll,mux,memory */
-	mov	lr, ip		/* restore link */
-	mov	pc, lr		/* back to my caller */
-#endif /* CONFIG_SKIP_LOWLEVEL_INIT */
+#endif
+
+#ifndef CONFIG_SKIP_RELOCATE_UBOOT
+relocate:				/* relocate U-Boot to RAM	    */
+	adr	r0, _start		/* r0 <- current position of code   */
+	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */
+	cmp     r0, r1                  /* don't reloc during debug         */
+	beq     stack_setup
+
+	ldr	r2, _armboot_start
+	ldr	r3, _bss_start
+	sub	r2, r3, r2		/* r2 <- size of armboot            */
+	add	r2, r0, r2		/* r2 <- source end address         */
+
+copy_loop:
+	ldmia	r0!, {r3-r10}		/* copy from source address [r0]    */
+	stmia	r1!, {r3-r10}		/* copy to   target address [r1]    */
+	cmp	r0, r2			/* until source end addreee [r2]    */
+	ble	copy_loop
+#endif /* CONFIG_SKIP_RELOCATE_UBOOT */
+
+
+	/* Set up the stack						    */
+stack_setup:
+	ldr	r0, _TEXT_BASE		/* upper 128 KiB: relocated uboot   */
+	sub	r0, r0, #CONFIG_SYS_MALLOC_LEN	/* malloc area                      */
+	sub	r0, r0, #CONFIG_SYS_GBL_DATA_SIZE /* bdinfo                        */
+#ifdef CONFIG_USE_IRQ
+	sub	r0, r0, #(CONFIG_STACKSIZE_IRQ+CONFIG_STACKSIZE_FIQ)
+#endif
+	sub	sp, r0, #12		/* leave 3 words for abort-stack    */
+
+clear_bss:
+	ldr	r0, _bss_start		/* find start of bss segment        */
+	ldr	r1, _bss_end		/* stop here                        */
+	mov	r2, #0x00000000		/* clear                            */
+
+clbss_l:str	r2, [r0]		/* clear loop...                    */
+	add	r0, r0, #4
+	cmp	r0, r1
+	ble	clbss_l
+
+	ldr	pc, _start_armboot
+
+_start_armboot:
+	.word start_armboot
+
+
 
 /*
  *************************************************************************

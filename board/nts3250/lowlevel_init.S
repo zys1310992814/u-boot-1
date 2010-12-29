@@ -2,7 +2,7 @@
 #include <version.h>
 
 #define IRAM_STK_TEMP 0x0003C000
-.globl nts3250_sys_init
+.globl nts3250_lowlevel_init
 .globl dcache_kill
 
 .globl lowlevel_init
@@ -11,7 +11,13 @@ lowlevel_init:
 	 * Setup basic stack and save return address
 	 */
 	ldr sp, =IRAM_STK_TEMP
-	mov pc, lr
+
+	stmia sp,{lr}
+	
+	bl nts3250_lowlevel_init
+	
+	ldmia sp, {r0}
+	mov   pc, r0
 
 dcache_kill:
 	/*

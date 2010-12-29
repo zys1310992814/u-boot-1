@@ -2,7 +2,7 @@ include $(TOPDIR)/config.mk
 
 LIB	= $(obj)lib$(BOARD).a
 
-COBJS	:= nts3250.o net.o spi_lpc3250.o
+COBJS	:= nts3250.o net.o spi_lpc3250.o lowlevel.o
 SOBJS	:= lowlevel_init.o
 
 SRCS	:= $(SOBJS:.o=.S) $(COBJS:.o=.c)
