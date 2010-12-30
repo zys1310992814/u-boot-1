@@ -32,6 +32,8 @@ SECTIONS
 	.text :
 	{
 		cpu/arm926ejs/start.o (.text)
+		board/nts3250/lowlevel_init.o (.text)
+		board/nts3250/lowlevel.o (.text)
 		*(.text)
 	}
 
