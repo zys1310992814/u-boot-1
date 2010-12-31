@@ -140,18 +140,18 @@
  */
 #include <config_cmd_default.h>
 
-#define CONFIG_CMD_DHCP
+#undef CONFIG_CMD_DHCP
 #define CONFIG_CMD_ENV
 #define CONFIG_CMD_ECHO /* ECHO command */
 #define CONFIG_CMD_CACHE /* Cache support */
 #define CONFIG_CMD_RUN
-#define CONFIG_CMD_LOADB
-#define CONFIG_CMD_LOADS
+#undef CONFIG_CMD_LOADB
+#undef CONFIG_CMD_LOADS
 #undef CONFIG_CMD_SAVES
 #define CONFIG_CMD_MEMORY
 #define CONFIG_CMD_PING
 #define CONFIG_CMD_NET
-#define CONFIG_CMD_BDI
+#undef CONFIG_CMD_BDI
 #undef CONFIG_CMD_SAVEENV
 #undef CONFIG_CMD_ELF
 #undef CONFIG_CMD_MISC
@@ -179,7 +179,7 @@
 /*
  * Support for various capabilities
  */
-#define CONFIG_AUTO_COMPLETE
+#undef CONFIG_AUTO_COMPLETE
 #define CONFIG_CMDLINE_EDITING
 
 /*
@@ -194,6 +194,7 @@
 /*
  * ENV options
  */
+/*
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"load_bsp=protect off all;"				\
 	"tftp 80000000 bsp.bin;"				\
@@ -208,5 +209,5 @@
 	"rk=tftp 80000000 uImage;"				\
 	"bootm 80000000 - -\0"					\
 	"load=run load_kernel load_appfs\0"
-
+*/
 #endif  /* __NTS3250_H__*/
