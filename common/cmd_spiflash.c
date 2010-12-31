@@ -2,20 +2,6 @@
 #include <command.h>
 #include <spi_lpc3250.h>
 
-//CMD Code For W25X40A and S25FL129
-
-#define SF_CMD_READ		0x03
-#define SF_CMD_READ_ID		0x90
-#define SF_CMD_PP		0x02
-#define SF_CMD_RDSR		0x05
-#define SF_CMD_WREN		0x06
-#define SF_CMD_BE		0xC7
-#define SF_CMD_SE		0xD8
-#define BLOCK_SIZE		0x10000
-#define BLOCK_MASK		(~0xFFFF)
-#define PAGE_SIZE		0x100
-#define PAGE_MASK		(~0xFF)
-
 unsigned int time_flag = 0;
 unsigned int time_out = 0x2000;
 
@@ -150,26 +136,6 @@ void spi_flash_write(unsigned char *src, unsigned int des, int cnt)
 		src += size;
 		des += size;
 	}
-}
-
-void spi_flash_read(unsigned int src, unsigned char *des, int cnt)
-{
-	int i;
-	set_time_out(120000);
-	clear_time_flag();
-	spi1_cs_on();
-	spi1_write_byte(SF_CMD_READ);
-	spi1_write_byte((src>>16) & 0xFF);
-	spi1_write_byte((src>>8) & 0xFF);
-	spi1_write_byte((src) & 0xFF);
-
-	for (i=0; i<cnt; i++) {
-		des[i] = spi1_read_byte();
-		print_dot();
-	}
-
-	spi1_cs_off();
-	udelay(1);
 }
 
 void spi_flash_display(unsigned int addr, int cnt)

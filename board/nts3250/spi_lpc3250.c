@@ -1,6 +1,6 @@
 #include <common.h>
+#include <spi_lpc3250.h>
 #include "lpc3250.h"
-#include "spi_lpc3250.h"
 
 void init_spi1(void)
 {
@@ -83,3 +83,21 @@ unsigned char spi1_read_byte(void)
 	}
 	return r;
 }
+
+void spi_flash_read(unsigned int src, unsigned char *des, unsigned int cnt)
+{
+	int i;
+	spi1_cs_on();
+
+	spi1_write_byte(SF_CMD_READ);
+	spi1_write_byte((src>>16) & 0xFF);
+	spi1_write_byte((src>>8) & 0xFF);
+	spi1_write_byte((src) & 0xFF);
+
+	for (i=0; i<cnt; i++) {
+		des[i] = spi1_read_byte();
+	}
+
+	spi1_cs_off();
+}
+
