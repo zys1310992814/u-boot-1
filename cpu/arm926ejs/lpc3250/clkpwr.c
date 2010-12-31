@@ -23,6 +23,7 @@
 
 #include <common.h>
 #include <lpc3250.h>
+#include <div64.h>
 
 //DECLARE_GLOBAL_DATA_PTR;
 
@@ -92,27 +93,27 @@ static unsigned int clkpwr_check_pll_setup(unsigned int ifreq,
   switch (mode)
   {
     case 0x0: /* Non-integer mode */
-      cfreq = (m * i64freq) / (2 * p * n);
-      fcco = (m * i64freq) / n;
-      fref = i64freq / n;
+      cfreq = lldiv((m * i64freq), (2 * p * n));
+      fcco = lldiv((m * i64freq), n);
+      fref = lldiv(i64freq, n);
       break;
 
     case 0x1: /* integer mode */
-      cfreq = (m * i64freq) / n;
-      fcco = (m * i64freq) / (n * 2 * p);
-      fref = i64freq / n;
+      cfreq = lldiv((m * i64freq), n);
+      fcco = lldiv((m * i64freq), (n * 2 * p));
+      fref = lldiv(i64freq,n);
       break;
 
     case 0x2:
     case 0x3: /* Direct mode */
-      cfreq = (m * i64freq) / n;
+      cfreq = lldiv((m * i64freq), n);
       fcco = cfreq;
-      fref = i64freq / n;
+      fref = lldiv(i64freq,n);
       break;
 
     case 0x4:
     case 0x5: /* Bypass mode */
-      cfreq = i64freq / (2 * p);
+      cfreq = lldiv(i64freq, (2 * p));
       fcco = 156000000;
       fref = 1000000;
       break;
