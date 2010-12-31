@@ -5,7 +5,7 @@
  :: ::   ::       ::         ::         Project    : 
  ::  ::  ::       ::           :::      FileName   : lowlevel.c
  ::   :: ::       ::             ::     Generate   : 
- ::    ::::       ::       ::      ::   Update     : 2010-12-30 15:35:31
+ ::    ::::       ::       ::      ::   Update     : 2010-12-31 16:26:06
 ::::    :::     ::::::      ::::::::    Version    : 0.0.1
 
 Description:
@@ -243,9 +243,93 @@ void init_emc(void)
 	EMC->emcahn_regs [4].emcahbcontrol = EMC_AHB_PORTBUFF_EN;
 }
 
-
-void  nts3250_lowlevel_init(void)
+void init_uart5(void)
 {
-	init_clock();
-	init_emc();
+	unsigned int tmp;
+	/* Turn CLK on, CLKPWR_UART_USE_HCLK -> 1, use hclk */
+	tmp = CLKPWR->clkpwr_uart_clk_ctrl;
+	tmp |= CLKPWR_UARTCLKCTRL_UART5_EN;
+	CLKPWR->clkpwr_uart_clk_ctrl;
+
+	/* CLK mode */
+	tmp = UARTCNTL->clkmode;
+	tmp &= ~UART_CLKMODE_MASK(5);
+	tmp |= UART_CLKMODE_LOAD(UART_CLKMODE_AUTO, 5);
+	UARTCNTL->clkmode = tmp;
+
+	/*
+	Config 115200
+	CLKPWR_UART_Y_DIV(y)  -> 134
+	CLKPWR_UART_X_DIV(x)  -> 19
+	CLKPWR_UART_USE_HCLK  -> 0, PCLK
+	*/
+	CLKPWR->clkpwr_uart5_clk_ctrl = (CLKPWR_UART_Y_DIV(134) |
+		CLKPWR_UART_X_DIV(19));
+
+	/* Config 8N1, UART_LCR_STOP1BIT -> y, UART_LCR_WLEN_8BITS -> y */
+	UART5->lcr = (UART_LCR_STOP1BIT | UART_LCR_WLEN_8BITS);
+
+	/* Reset TX RX FIFO */
+	tmp = UART5->iir_fcr;
+	tmp |= (UART_FCR_TXFIFO_FLUSH |UART_FCR_RXFIFO_FLUSH);
+	UART5->iir_fcr = tmp;
+}
+
+void uart5_send_char(unsigned char c)
+{
+	while ((UART5->lsr&UART_LSR_TEMT)==0);
+	UART5->dll_fifo = c;
+}
+
+void puth(unsigned int d, int n)
+{
+	char s[8];
+	int i;
+	for (i=0; i<n; i++) {
+		s[i] = (d>>(4*i))&0xF;
+		if (s[i]>=10) {
+			s[i] = s[i]+'A'-10;
+		} else {
+			s[i] = s[i]+'0';
+		}
+	}
+	for (i=n-1; i>=0; i--) {
+		uart5_send_char(s[i]);
+	}
+}
+void lowlevel_puts(char * str)
+{
+	char *p = str;
+	while(*p){
+		uart5_send_char(*p);
+		p++;
+	}
+}
+
+/*
+ * 参数由start.S中传入
+ * addr：存储于R0中，其值为u-boot的运行起始地址，程序运行时通过adr指令获取
+ * length:存储于R1中，其值为u-boot程序镜像的代码部分大小（从__armboot_start到_bss_start），在链接的时候确认
+ */
+void  nts3250_lowlevel_init(unsigned int addr, unsigned int length)
+{
+	extern void stack_setup(void);//定义在cpu/arm926ejs/start.S中
+
+	init_uart5();
+
+	if ((addr<0xE0000000) && (addr>0x10000000)) { //SDRAM
+		uart5_send_char('S');
+	} else {
+		init_clock();
+		init_emc();
+		if (addr < 0x10000000) {//IRAM（SPI）通过SPI接口实现relocate，然后直接跳到堆栈设置段
+			uart5_send_char('I');
+			init_spi1();
+			spi_flash_read(0x4, (char *)TEXT_BASE, length);
+			stack_setup();
+			//Never reach here
+		} else {
+			uart5_send_char('F');
+		}
+	}
 }

@@ -172,6 +172,10 @@ cpu_init_crit:
 	/*
 	 * Go setup Memory and board specific bits prior to relocation.
 	 */
+	adr	r0, _start
+	ldr	r1, _armboot_start
+	ldr	r2, _bss_start
+	sub	r1, r2, r1		/* r2 <- size of armboot            */
 	bl	lowlevel_init	/* go setup pll,mux,memory */
 #endif
 
@@ -196,6 +200,7 @@ copy_loop:
 
 
 	/* Set up the stack						    */
+.globl stack_setup
 stack_setup:
 	ldr	r0, _TEXT_BASE		/* upper 128 KiB: relocated uboot   */
 	sub	r0, r0, #CONFIG_SYS_MALLOC_LEN	/* malloc area                      */
