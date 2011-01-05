@@ -249,6 +249,68 @@ int do_spi_display(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	return 0;
 }
 
+/*
+ * SPI中内存的分布
+ *
+ * 0x000000	->	0x13579BDF
+ * 0x000004	->	size of uboot
+ * 0x000008..	->	uboot
+ *
+ * 0x040000	->	len of kernel
+ * 0x040004	->	crc of kernel
+ * 0x040008	->	kernel
+ *
+ * 0x800000	->	len of appfs
+ * 0x800004	->	crc of appfs
+ * 0x800008	->	appfs
+ *
+ */
+int do_spi_applet_install(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
+{
+	unsigned int *src;
+	unsigned int len;
+	unsigned int *p;
+
+	if (argc<4) {
+		cmd_usage(cmdtp);
+		return 1;
+	}
+
+	src  = (unsigned int *)simple_strtoul(argv[2], NULL, 16);
+	len = simple_strtoul(argv[3], NULL, 16);
+
+	switch (argv[1][0]){
+		case 'u':
+		case 'U':
+			src -= 1;// 1=>sizeof 0x13579BDF
+			src[0] = 0x13579BDF;
+			//Uboot's size is used by LPC32XX's Bootstrap
+			//the size shouldn't large than 56K
+			//refer LPC32XX's user manual
+			src[1] = 56*1024;
+			spi_flash_write(src, 0, len+4);
+			break;
+		case 'k':
+		case 'K':
+			src    -= 2;
+			src[0]  = len;
+			src[1]  = crc32(0, src+2, len);
+			spi_flash_write(src, CONFIG_KERNEL_OFFSET, len+8);
+			break;
+		case 'a':
+		case 'A':
+			src    -= 2;
+			src[0]  = len;
+			src[1]  = crc32(0, src+2, len);
+			spi_flash_write(src, CONFIG_APPFS_OFFSET, len+8);
+			break;
+		default:
+			cmd_usage(cmdtp);
+			return 1;
+	}
+	return 0;
+}
+
 U_BOOT_CMD(
 	sfsi, 1, 0, do_sf_show_information,
 	"spi flash show information",
@@ -294,3 +356,13 @@ U_BOOT_CMD(
 	"<addr> - identifies the address in spiflash\n"
 	"<cnt> - number of bytes to display\n"
 );
+
+U_BOOT_CMD(
+	sfai, 4, 0, do_spi_applet_install,
+	"spi flash applet install",
+	"<name> <src> <size> - auto erase and install <name> from <addr> into spi flash\n"
+	"<name> - name of applet ,such as uboot/kernel/appfs\n"
+	"<src>  - identifies the source address\n"
+	"<size> - size of applet\n"
+);
+
