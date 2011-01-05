@@ -5,7 +5,7 @@
  :: ::   ::       ::         ::         Project    : 
  ::  ::  ::       ::           :::      FileName   : lowlevel.c
  ::   :: ::       ::             ::     Generate   : 
- ::    ::::       ::       ::      ::   Update     : 2010-12-31 16:26:06
+ ::    ::::       ::       ::      ::   Update     : 2011-01-05 17:11:18
 ::::    :::     ::::::      ::::::::    Version    : 0.0.1
 
 Description:
@@ -20,6 +20,8 @@ Changelog:
 	V0.0.1	版本发布
 */
 #include <lpc3250.h>
+#include <spi_lpc3250.h>
+#include <common.h>
 
 //EMC配置，具体配置含义及内容参考《BSP详细设计报告》
 /* 静态存储控制器相关配置 */
@@ -316,20 +318,15 @@ void  nts3250_lowlevel_init(unsigned int addr, unsigned int length)
 	extern void stack_setup(void);//定义在cpu/arm926ejs/start.S中
 
 	init_uart5();
-
-	if ((addr<0xE0000000) && (addr>0x10000000)) { //SDRAM
-		uart5_send_char('S');
-	} else {
+	if ((addr>=0xE0000000) || (addr<=0x10000000)) {//EMC or IRAM
 		init_clock();
 		init_emc();
-		if (addr < 0x10000000) {//IRAM（SPI）通过SPI接口实现relocate，然后直接跳到堆栈设置段
-			uart5_send_char('I');
+		if (addr < 0x10000000) {//IRAM（SPI）
 			init_spi1();
+			//通过SPI接口实现relocate，然后直接跳到堆栈设置段
 			spi_flash_read(0x4, (char *)TEXT_BASE, length);
 			stack_setup();
 			//Never reach here
-		} else {
-			uart5_send_char('F');
 		}
 	}
 }

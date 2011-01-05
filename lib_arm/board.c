@@ -286,7 +286,10 @@ init_fnc_t *init_sequence[] = {
 	NULL,
 };
 
-void start_armboot (void)
+/*
+ *	run_addr : u-boot运行地址
+ */
+void start_armboot (unsigned int run_addr)
 {
 	init_fnc_t **init_fnc_ptr;
 	char *s;
@@ -304,6 +307,16 @@ void start_armboot (void)
 	memset (gd->bd, 0, sizeof (bd_t));
 
 	gd->flags |= GD_FLG_RELOC;
+
+	/* set where u-boot from*/
+	gd->flags &= ~GD_FLG_MSKBOOT;
+	if ((run_addr<0xE0000000) && (run_addr>0x10000000)) {
+		gd->flags |= GD_FLG_RAMBOOT;
+	} else if (run_addr < 0x10000000) {
+		gd->flags |= GD_FLG_SPIBOOT;
+	} else {
+		gd->flags |= GD_FLG_STCBOOT;
+	}
 
 	monitor_flash_len = _bss_start - _armboot_start;
 

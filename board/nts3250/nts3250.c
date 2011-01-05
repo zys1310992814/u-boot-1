@@ -155,6 +155,9 @@ int board_init (void)
 #endif
 
 	init_spi1();
+	if (gd->flags & GD_FLG_SPIBOOT) {
+		printf("\r\n\r\nHey, we're booting from SPI Flash\r\n");
+	}
 	return 0;
 }
 

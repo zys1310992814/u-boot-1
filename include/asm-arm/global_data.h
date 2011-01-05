@@ -65,6 +65,11 @@ typedef	struct	global_data {
 #define	GD_FLG_LOGINIT	0x00020		/* Log Buffer has been initialized	*/
 #define GD_FLG_DISABLE_CONSOLE	0x00040		/* Disable console (in & out)	 */
 
+#define GD_FLG_MSKBOOT	0x00F00
+#define GD_FLG_SPIBOOT	0x00100	/* Boot From SPI Flash */
+#define GD_FLG_RAMBOOT	0x00200 /* Boot From SDRAM */
+#define GD_FLG_STCBOOT	0x00400 /* Boot From Static Flash */
+
 #define DECLARE_GLOBAL_DATA_PTR     register volatile gd_t *gd asm ("r8")
 
 #endif /* __ASM_GBL_DATA_H */

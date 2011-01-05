@@ -175,7 +175,7 @@ cpu_init_crit:
 	adr	r0, _start
 	ldr	r1, _armboot_start
 	ldr	r2, _bss_start
-	sub	r1, r2, r1		/* r2 <- size of armboot            */
+	sub	r1, r2, r1
 	bl	lowlevel_init	/* go setup pll,mux,memory */
 #endif
 
@@ -220,6 +220,7 @@ clbss_l:str	r2, [r0]		/* clear loop...                    */
 	cmp	r0, r1
 	ble	clbss_l
 
+	adr	r0, _start
 	ldr	pc, _start_armboot
 
 _start_armboot:
