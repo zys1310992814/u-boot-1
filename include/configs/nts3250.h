@@ -77,6 +77,12 @@
 #define CONFIG_FLASH_SHOW_PROGRESS	45
 
 /*
+ * Applets Offsets
+ */
+#define CONFIG_KERNEL_OFFSET		0x40000
+#define CONFIG_APPFS_OFFSET		0x800000
+
+/*
  * ENV in norflash
 */
 #define CONFIG_SYS_MONITOR_BASE		TEXT_BASE	/* start of monitor */
@@ -116,7 +122,7 @@
 /*
  * Default load address for programs
  */
-#define CONFIG_SYS_LOAD_ADDR		0x80000000
+#define CONFIG_SYS_LOAD_ADDR		0x80001000
 
 
 /*
