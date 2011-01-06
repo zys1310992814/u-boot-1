@@ -201,20 +201,9 @@
 /*
  * ENV options
  */
-/*
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"load_bsp=protect off all;"				\
-	"tftp 80000000 bsp.bin;"				\
-	"erase e0000000 e03fffff;"				\
-	"cp.b 80000000 e0000000 $(filesize);"			\
-	"protect on all\0"					\
-	"load_appfs=protect off all;"				\
-	"tftp 80000000 appfs.jffs2;"				\
-	"erase e0400000 e1ffffff;"				\
-	"cpj 80000000 e0400000 $(filesize) 20000 1c00000;"	\
-	"protect on all\0"					\
-	"rk=tftp 80000000 uImage;"				\
-	"bootm 80000000 - -\0"					\
-	"load=run load_kernel load_appfs\0"
-*/
+	"inst_uboot=sfai u 80001000 $(filesize)\0"		\
+	"inst_kernel=sfai k 80001000 $(filesize)\0"		\
+	"inst_appfs=sfai a 80001000 $(filesize)\0"
+
 #endif  /* __NTS3250_H__*/

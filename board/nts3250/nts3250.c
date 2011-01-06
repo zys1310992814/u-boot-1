@@ -4,10 +4,12 @@
 #include <lpc3250.h>
 #include <spi_lpc3250.h>
 #include <net.h>
+#include <flash.h>
 #include "nts3250_prv.h"
 
 DECLARE_GLOBAL_DATA_PTR;
 extern int dcache_kill(void);
+static void do_install(void);
 
 void reset_timer (void)
 {
@@ -155,16 +157,107 @@ int board_init (void)
 #endif
 
 	init_spi1();
-	if (gd->flags & GD_FLG_SPIBOOT) {
-		printf("\r\n\r\nHey, we're booting from SPI Flash\r\n");
-	}
 	return 0;
 }
 
 int dram_init (void)
 {
+#ifdef CONFIG_AUTOINST_DELAY
+	unsigned int timeout = CONFIG_AUTOINST_DELAY;
+#else
+	unsigned int timeout = 5;
+#endif
+	unsigned char cancel=0;
+
 	gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
 	gd->bd->bi_dram[0].size = PHYS_SDRAM_SIZE;
+
+	if (gd->flags & GD_FLG_SPIBOOT) {
+		printf("\r\nPress any key to cancel auto install... %2d", timeout);
+		while (timeout--) {
+			unsigned char i=100;
+			while (i--) {
+				cancel = tstc();
+				if (cancel) {
+					timeout=0;
+					break;
+				}
+				udelay(1000*10);//10ms
+			}
+			printf("\b\b%2d", timeout);
+		}
+		printf("\r\n");
+		if (!cancel) {
+			do_install();
+		}
+	}
 	return 0;
+}
+
+void do_install(void)
+{
+	unsigned int tmp[2];
+	char *src;
+	unsigned long dest, end;
+
+	flash_init();
+
+	//UBoot
+	printf("<1/3> Install uboot...\r\n");
+	tmp[0] = _bss_start - _armboot_start;
+	src    = (char *)_armboot_start;
+	dest   = CONFIG_SYS_FLASH_BASE;
+	end    = (dest+tmp[0]) | (CONFIG_SYS_FLASH_SECT_SIZE-1);
+
+	//fix magic number of LPC32xx
+	*((unsigned int *)src) = 0x13579BD1;
+
+	flash_sect_erase(dest, end);
+	flash_write(src, dest, tmp[0]);
+	printf("Finish\r\n\r\n");
+
+	//kernel
+	printf("<2/3> Install kernel...\r\nREAD\r\n");
+	spi_flash_read(CONFIG_KERNEL_OFFSET, (unsigned char *)tmp, sizeof(tmp));
+	src  = (char *)CONFIG_SYS_LOAD_ADDR;
+	dest = CONFIG_SYS_FLASH_BASE + CONFIG_KERNEL_OFFSET;
+	end  = (dest+tmp[0]) | (CONFIG_SYS_FLASH_SECT_SIZE-1);
+
+	if ((tmp[0]==0) || (tmp[0]==0xFFFFFFFF)) {
+		printf("there isn't kernel, skip!\r\n");
+	} else {
+		spi_flash_read(CONFIG_KERNEL_OFFSET + sizeof(tmp), src, tmp[0]);
+		if (tmp[1] != crc32(0, src, tmp[0])) {
+			printf("CRC check fail!\r\n");
+		} else {
+			printf("ERASE");
+			flash_sect_erase(dest, end);
+			printf("\r\nWRITE\r\n");
+			flash_write(src, dest, tmp[0]);
+		}
+	}
+	printf("Finish\r\n\r\n");
+
+	//Appfs partition
+	printf("<3/3> Install appfs...\r\nREAD\r\n");
+	spi_flash_read(CONFIG_APPFS_OFFSET, (unsigned char *)tmp, sizeof(tmp));
+	src  = (char *)CONFIG_SYS_LOAD_ADDR;
+	dest = CONFIG_SYS_FLASH_BASE + CONFIG_APPFS_OFFSET;
+	end  = (dest+tmp[0]) | (CONFIG_SYS_FLASH_SECT_SIZE-1);
+
+	if ((tmp[0]==0) || (tmp[0]==0xFFFFFFFF)) {
+		printf("there isn't appfs, skip!\r\n");
+	} else {
+		spi_flash_read(CONFIG_APPFS_OFFSET + sizeof(tmp), src, tmp[0]);
+		if (tmp[1] != crc32(0, src, tmp[0])) {
+			printf("CRC check fail!\r\n");
+		} else {
+			printf("ERASE");
+			flash_sect_erase(dest, end);
+			printf("\r\nWRITE\r\n");
+			flash_write(src, dest, tmp[0]);
+		}
+	}
+	printf("Finish\r\n\r\n");
 }
 
