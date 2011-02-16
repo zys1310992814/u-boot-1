@@ -5,6 +5,8 @@
 #ifndef __NTS3250_H__
 #define __NTS3250_H__
 
+#include <version.h>
+
 /*
  * Chip speific options
  */
@@ -195,14 +197,14 @@
 #define CONFIG_NETMASK		255.255.255.0
 #define CONFIG_IPADDR		192.168.30.240
 #define CONFIG_SERVERIP		192.168.1.246
-#define CONFIG_BOOTARGS		"console=ttyS0,115200n8"
+#define CONFIG_BOOTARGS		"console=ttyS0,115200n8 uboot_ver=\""U_BOOT_VERSION"\""
 #define CONFIG_BOOTCOMMAND	"bootm e0040000 - -"
 
 /*
  * ENV options
  */
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"bsp_path=" \
+	"bsp_path=\0" \
 	"aiu=tftp 80001000 $(serverip):$(bsp_path)/u-boot.bin ; sfai uboot 80001000 $(filesize)\0" \
 	"aik=tftp 80001000 $(serverip):$(bsp_path)/uImage ; sfai kernel 80001000 $(filesize)\0" \
 	"aia=tftp 80001000 $(serverip):$(bsp_path)/appfs.jffs2 ; sfai appfs 80001000 $(filesize)\0" \
