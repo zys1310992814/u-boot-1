@@ -5,7 +5,7 @@
  :: ::   ::       ::         ::         Project    : 
  ::  ::  ::       ::           :::      FileName   : lowlevel.c
  ::   :: ::       ::             ::     Generate   : 
- ::    ::::       ::       ::      ::   Update     : 2011-01-05 17:11:18
+ ::    ::::       ::       ::      ::   Update     : 2011-02-18 15:58:27
 ::::    :::     ::::::      ::::::::    Version    : 0.0.1
 
 Description:
@@ -299,9 +299,28 @@ void puth(unsigned int d, int n)
 		uart5_send_char(s[i]);
 	}
 }
-void lowlevel_puts(char * str)
+
+/*
+ * 字符串打印输出函数
+ *
+ * 参数：
+ * 	bootaddr：启动地址
+ * 	str：	要输出的字符串指针
+ *
+ * 说明
+ * 	仅适用于Stage1阶段，亦即arm_boot函数运行之前使用
+ * 	主要区别是字符串指针默认是以链接时指定的运行地址（TEXT_BASE）为基准；
+ * 	而stage1阶段的代码relocate之前其运行地址和TEXT_BASE是不一样的
+ *
+ * 	IMPORTANT:
+ * 		stage1阶段代码中如果有字符串/常量，需要将代码的.rodata段链接
+ * 	在比较靠前的位置，以免通过SPI或者其他方式复制到IRAM中运行的时候，找不
+ * 	到正确的数据。
+ */
+void lowlevel_puts(unsigned int bootaddr, char * str)
 {
-	char *p = str;
+	char *p = str-TEXT_BASE+bootaddr;
+
 	while(*p){
 		uart5_send_char(*p);
 		p++;
@@ -315,18 +334,27 @@ void lowlevel_puts(char * str)
  */
 void  nts3250_lowlevel_init(unsigned int addr, unsigned int length)
 {
-	extern void stack_setup(void);//定义在cpu/arm926ejs/start.S中
-
+	extern void stack_setup(void);//Defined in cpu/arm926ejs/start.S
 	init_uart5();
-	if ((addr>=0xE0000000) || (addr<=0x10000000)) {//EMC or IRAM
+
+	if (addr==0xE0000000) {//EMC
 		init_clock();
 		init_emc();
-		if (addr < 0x10000000) {//IRAM（SPI）
-			init_spi1();
-			//通过SPI接口实现relocate，然后直接跳到堆栈设置段
-			spi_flash_read(0x4, (char *)TEXT_BASE, length);
-			stack_setup();
-			//Never reach here
-		}
+	} else if (addr==0x08000000) {//IRAM
+		/*
+		 * TODO:
+		 * 	NAND or UART boot reach here also
+		 * 	So just add support of them!
+		 */
+		init_clock();
+		init_emc();
+		init_spi1();
+
+		//Manual relocate from SPI interface
+		//then jump to arm_boot() directly
+		spi_flash_read(0x8, (char *)TEXT_BASE, length);
+		stack_setup();
+	} else {//SDRAM
+		;//Do nothing with SDRAM Boot
 	}
 }
