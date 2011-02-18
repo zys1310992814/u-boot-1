@@ -208,6 +208,6 @@
 	"aiu=tftp 80001000 $(serverip):$(bsp_path)/u-boot.bin ; sfai uboot 80001000 $(filesize)\0" \
 	"aik=tftp 80001000 $(serverip):$(bsp_path)/uImage ; sfai kernel 80001000 $(filesize)\0" \
 	"aia=tftp 80001000 $(serverip):$(bsp_path)/appfs.jffs2 ; sfai appfs 80001000 $(filesize)\0" \
-	"autoinstall=sfbe ; run aiu ; run aik ; run aia\0"
+	"autoinstall= run aiu ; run aik ; run aia\0"
 
 #endif  /* __NTS3250_H__*/

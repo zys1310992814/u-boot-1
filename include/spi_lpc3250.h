@@ -22,5 +22,6 @@ void spi1_cs_off(void);
 void spi1_write_byte(unsigned char c);
 unsigned char spi1_read_byte(void);
 void spi_flash_read(unsigned int src, unsigned char *des, unsigned int cnt);
+void install_spi_to_norflash(void);
 
 #endif // __SPI_LPC3250_H__

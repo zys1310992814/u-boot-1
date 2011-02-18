@@ -101,3 +101,68 @@ void spi_flash_read(unsigned int src, unsigned char *des, unsigned int cnt)
 	spi1_cs_off();
 }
 
+void install_spi_to_norflash(void)
+{
+	char *src;
+	unsigned int dest, end, len;
+
+	flash_init();
+
+	//UBoot
+	printf("<1/3> Install uboot...\r\n");
+	{
+		src  = (char *)_armboot_start;
+		dest = CONFIG_SYS_FLASH_BASE;
+		len  = _bss_start - _armboot_start;
+
+		end    = (dest+len) | (CONFIG_SYS_FLASH_SECT_SIZE-1);
+
+		//fix magic number of LPC32xx
+		*((unsigned int *)src) = 0x13579BD1;
+
+		flash_sect_erase(dest, end);
+		flash_write(src, dest, len);
+		printf("Finish\r\n");
+	}
+
+	//kernel
+	printf("<2/3> Install kernel...\r\n");
+	install_spi_applet_to_norflash(CONFIG_KERNEL_OFFSET);
+
+	//Appfs partition
+	printf("<3/3> Install Appfs...\r\n");
+	install_spi_applet_to_norflash(CONFIG_APPFS_OFFSET);
+}
+
+void install_spi_applet_to_norflash(unsigned int offset)
+{
+	struct{
+		unsigned int crc;
+		unsigned int len;
+	}hdr;
+	unsigned int startaddr,endaddr;
+
+	//读取头部信息，并检查镜像大小
+	spi_flash_read(offset, (char *)&hdr, sizeof(hdr));
+	if (hdr.len==0 || hdr.len==0xFFFFFFFF) {
+		printf("Fail: Length invalid!\r\n");
+		return -1;
+	}
+
+	//读取镜像内容，并校验镜像CRC
+	spi_flash_read(offset+sizeof(hdr), CONFIG_SYS_LOAD_ADDR, hdr.len);
+	if (hdr.crc != crc32(0, (char *)CONFIG_SYS_LOAD_ADDR, hdr.len)) {
+		printf("Fail:CRC check failed!\r\n");
+		return -2;
+	}
+
+	//擦除并写入
+	startaddr = CONFIG_SYS_FLASH_BASE+offset;
+	endaddr   = (startaddr+hdr.len)  | (CONFIG_SYS_FLASH_SECT_SIZE-1);//sect_size-1 means mask of sector addr
+	flash_sect_erase(startaddr, endaddr);
+	flash_write(CONFIG_SYS_LOAD_ADDR, startaddr, hdr.len);
+
+	printf("OK!\r\n");
+	return 0;
+}
+
