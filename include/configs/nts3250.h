@@ -204,7 +204,7 @@
  * ENV options
  */
 #define CONFIG_EXTRA_ENV_SETTINGS \
-	"bsp_path=.\0" \ //default is current directory
+	"bsp_path=.\0" \
 	"aiu=tftp 80001000 $(serverip):$(bsp_path)/u-boot.bin ; sfai uboot 80001000 $(filesize)\0" \
 	"aik=tftp 80001000 $(serverip):$(bsp_path)/uImage ; sfai kernel 80001000 $(filesize)\0" \
 	"aia=tftp 80001000 $(serverip):$(bsp_path)/appfs.jffs2 ; sfai appfs 80001000 $(filesize)\0" \
