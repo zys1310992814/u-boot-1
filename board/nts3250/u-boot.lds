@@ -34,6 +34,7 @@ SECTIONS
 		cpu/arm926ejs/start.o (.text)
 		board/nts3250/lowlevel_init.o (.text)
 		board/nts3250/lowlevel.o (.text)
+		board/nts3250/lowlevel.o (.rodata*)
 		board/nts3250/spi_lpc3250.o (.text)
 		*(.text)
 	}
