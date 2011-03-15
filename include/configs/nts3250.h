@@ -195,9 +195,9 @@
  * Network setup
  */
 #define CONFIG_NETMASK		255.255.255.0
-#define CONFIG_IPADDR		192.168.30.240
-#define CONFIG_SERVERIP		192.168.1.246
-#define CONFIG_BOOTARGS		"console=ttyS0,115200n8 uboot_ver=\""U_BOOT_VERSION"\""
+#define CONFIG_IPADDR		192.168.23.240
+#define CONFIG_SERVERIP		192.168.23.66
+#define CONFIG_BOOTARGS		"console=ttyS0,115200n8 uboot_version=\""U_BOOT_VERSION"\""
 #define CONFIG_BOOTCOMMAND	"bootm e0040000 - -"
 
 /*
