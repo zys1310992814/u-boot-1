@@ -5,7 +5,7 @@
  :: ::   ::       ::         ::         Project    : 
  ::  ::  ::       ::           :::      FileName   : lowlevel.c
  ::   :: ::       ::             ::     Generate   : 
- ::    ::::       ::       ::      ::   Update     : 2011-02-18 15:58:27
+ ::    ::::       ::       ::      ::   Update     : 2011-09-21 18:16:29
 ::::    :::     ::::::      ::::::::    Version    : 0.0.1
 
 Description:
@@ -337,24 +337,39 @@ void  nts3250_lowlevel_init(unsigned int addr, unsigned int length)
 	extern void stack_setup(void);//Defined in cpu/arm926ejs/start.S
 	init_uart5();
 
+	lowlevel_puts(addr, "Booting from :\t");
 	if (addr==0xE0000000) {//EMC
+		lowlevel_puts(addr, "NorFlash\n");
+
+		lowlevel_puts(addr, "Init clock:\n");
 		init_clock();
+
+		lowlevel_puts(addr, "Init EMC:\n");
 		init_emc();
 	} else if (addr==0x08000000) {//IRAM
+		lowlevel_puts(addr, "IRAM");
 		/*
 		 * TODO:
 		 * 	NAND or UART boot reach here also
 		 * 	So just add support of them!
 		 */
+		lowlevel_puts(addr, "Init clock:\n");
 		init_clock();
+
+		lowlevel_puts(addr, "Init EMC:\n");
 		init_emc();
+
+		lowlevel_puts(addr, "Init SPI:\n");
 		init_spi1();
 
+		lowlevel_puts(addr, "Load from SPI:\n");
 		//Manual relocate from SPI interface
 		//then jump to arm_boot() directly
 		spi_flash_read(0x8, (char *)TEXT_BASE, length);
+		lowlevel_puts(addr, "Jump to run...\n");
 		stack_setup();
 	} else {//SDRAM
+		lowlevel_puts(addr, "SRAM");
 		;//Do nothing with SDRAM Boot
 	}
 }
