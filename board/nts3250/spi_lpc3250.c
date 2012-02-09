@@ -38,14 +38,15 @@ void init_spi1(void)
 	SPI1->tim_ctrl = 0;
 }
 
-void spi1_cs_on(void)
+#define spi1_cs_on()	spi1_cs(1)
+#define spi1_cs_off()	spi1_cs(0)
+void spi1_cs(int active)
 {
-	GPIO->p3_outp_clr = OUTP_STATE_GPIO(5);
-}
-
-void spi1_cs_off(void)
-{
-	GPIO->p3_outp_set = OUTP_STATE_GPIO(5);
+	if (active) {
+		GPIO->p3_outp_clr = OUTP_STATE_GPIO(5);
+	} else {
+		GPIO->p3_outp_set = OUTP_STATE_GPIO(5);
+	}
 }
 
 void spi1_write_byte(unsigned char c)
