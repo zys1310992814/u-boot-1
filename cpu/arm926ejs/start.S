@@ -394,4 +394,9 @@ fiq:
 	bad_save_user_regs
 	bl	do_fiq
 
+.globl get_runtime_addr
+get_runtime_addr:
+	adr r0, _start
+	mov pc,lr
+
 #endif

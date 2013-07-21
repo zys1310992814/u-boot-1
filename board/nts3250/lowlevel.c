@@ -5,7 +5,7 @@
  :: ::   ::       ::         ::         Project    : 
  ::  ::  ::       ::           :::      FileName   : lowlevel.c
  ::   :: ::       ::             ::     Generate   : 
- ::    ::::       ::       ::      ::   Update     : 2011-01-05 17:11:18
+ ::    ::::       ::       ::      ::   Update     :  16:53:04
 ::::    :::     ::::::      ::::::::    Version    : 0.0.1
 
 Description:
@@ -299,9 +299,28 @@ void puth(unsigned int d, int n)
 		uart5_send_char(s[i]);
 	}
 }
-void lowlevel_puts(char * str)
+
+/*
+ * 字符串打印输出函数
+ *
+ * 参数：
+ * 	bootaddr：启动地址
+ * 	str：	要输出的字符串指针
+ *
+ * 说明
+ * 	仅适用于Stage1阶段，亦即arm_boot函数运行之前使用
+ * 	主要区别是字符串指针默认是以链接时指定的运行地址（TEXT_BASE）为基准；
+ * 	而stage1阶段的代码relocate之前其运行地址和TEXT_BASE是不一样的
+ *
+ * 	IMPORTANT:
+ * 		stage1阶段代码中如果有字符串/常量，需要将代码的.rodata段链接
+ * 	在比较靠前的位置，以免通过SPI或者其他方式复制到IRAM中运行的时候，找不
+ * 	到正确的数据。
+ */
+void lowlevel_puts(unsigned int bootaddr, char * str)
 {
-	char *p = str;
+	char *p = str-TEXT_BASE+bootaddr;
+
 	while(*p){
 		uart5_send_char(*p);
 		p++;
@@ -315,18 +334,87 @@ void lowlevel_puts(char * str)
  */
 void  nts3250_lowlevel_init(unsigned int addr, unsigned int length)
 {
-	extern void stack_setup(void);//定义在cpu/arm926ejs/start.S中
+	extern void stack_setup(void);//Defined in cpu/arm926ejs/start.Sa
+	char *p=(char *)TEXT_BASE;
+	unsigned int i;
+#define HW_INVALID_SDRAM	(1<<1)
+#define HW_INVALID_CPLD		(1<<2)
+	int hw_invalid=0;//检测硬件是否存在故障
 
 	init_uart5();
-	if ((addr>=0xE0000000) || (addr<=0x10000000)) {//EMC or IRAM
-		init_clock();
-		init_emc();
-		if (addr < 0x10000000) {//IRAM（SPI）
-			init_spi1();
-			//通过SPI接口实现relocate，然后直接跳到堆栈设置段
-			spi_flash_read(0x4, (char *)TEXT_BASE, length);
-			stack_setup();
-			//Never reach here
+	lowlevel_puts(addr, "Booting from :\t");
+	if ((addr!=0xE0000000) && (addr!=0x08000000)) {
+		lowlevel_puts(addr, "SDRAM\r\n");
+		;//Do nothing with SDRAM Boot
+		return;
+	}
+	//初始化时钟、EMC总线
+	lowlevel_puts(addr, "Init clock:\r\n");
+	init_clock();
+
+	lowlevel_puts(addr, "Init EMC:\r\n");
+	init_emc();
+
+	//SDRAM读写校验
+	lowlevel_puts(addr, "Check SDRAM:\r\n");
+	for (i=0; i<length; i++) {
+		p[i] = i&0xFF;
+	}
+	for (i=0; i<length; i++) {
+		if (p[i] == (i&0xFF)) {
+			continue;
 		}
+		lowlevel_puts(addr, "\t offset=0x");
+		puth((unsigned int)p+i, 8);
+		lowlevel_puts(addr, "   expect=0x");
+		puth(i&0xFF, 2);
+		lowlevel_puts(addr, " get=0x");
+		puth(p[i], 2);
+		lowlevel_puts(addr, "\r\n");
+		hw_invalid |= HW_INVALID_SDRAM;
+	}
+	if (hw_invalid & HW_INVALID_SDRAM) {
+		lowlevel_puts(addr, "SDRAM Check Failed\r\n");
+	} else {
+		lowlevel_puts(addr, "SDRAM Check PASS\r\n");
+	}
+
+	//CPLD寄存器读写检查
+	lowlevel_puts(addr, "CPLD Check\t");
+	p = (char *)0xE2000005;
+	p[0] = 0xA5;
+	if (p[0]!=0xA5) {
+		hw_invalid |= HW_INVALID_CPLD;
+	}
+	p[0] = 0x5A;
+	if (p[0]!=0x5A) {
+		hw_invalid |= HW_INVALID_CPLD;
+	}
+
+	if (hw_invalid & HW_INVALID_CPLD) {
+		lowlevel_puts(addr, "Failed\r\n");
+	} else {
+		lowlevel_puts(addr, "PASS\r\n");
+	}
+
+	//如果SDRAM存在硬件故障，就Halt在此
+	while (hw_invalid & HW_INVALID_SDRAM) ;
+
+	//继续初始化
+	if (addr==0xE0000000) {//EMC
+		lowlevel_puts(addr, "NorFlash\r\n");
+	} else if (addr==0x08000000) {//IRAM
+		lowlevel_puts(addr, "IRAM\r\n");
+
+		lowlevel_puts(addr, "Init SPI:\r\n");
+		init_spi1();
+
+		lowlevel_puts(addr, "Load from SPI\r\n");
+
+		//Manual relocate from SPI interface
+		//then jump to arm_boot() directly
+		spi_flash_read(0x8, (unsigned char *)TEXT_BASE, length);
+		lowlevel_puts(addr, "\r\nJump to run...\r\n");
+		stack_setup();
 	}
 }

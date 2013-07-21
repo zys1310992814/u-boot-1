@@ -187,7 +187,6 @@ int do_sf_sector_erase(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	}
 	addr = simple_strtoul(argv[1], NULL, 16);
 	cnt = simple_strtoul(argv[2], NULL, 16);
-	addr &= BLOCK_MASK;
 	spi_flash_sector_erase(addr, cnt);
 	printf("\nerased 0x%08X blocks from 0x%08X\n", cnt, addr);
 	return 0;
@@ -249,65 +248,54 @@ int do_spi_display(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 	return 0;
 }
 
-/*
- * SPI中内存的分布
- *
- * 0x000000	->	0x13579BDF
- * 0x000004	->	size of uboot
- * 0x000008..	->	uboot
- *
- * 0x040000	->	len of kernel
- * 0x040004	->	crc of kernel
- * 0x040008	->	kernel
- *
- * 0x800000	->	len of appfs
- * 0x800004	->	crc of appfs
- * 0x800008	->	appfs
- *
- */
 int do_spi_applet_install(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[])
 {
-	unsigned int *src;
-	unsigned int len;
-	unsigned int *p;
+	unsigned char *src;
+	unsigned int len,i,dest;
 
 	if (argc<4) {
 		cmd_usage(cmdtp);
 		return 1;
 	}
 
-	src  = (unsigned int *)simple_strtoul(argv[2], NULL, 16);
+	src  = (unsigned char *)simple_strtoul(argv[2], NULL, 16);
 	len = simple_strtoul(argv[3], NULL, 16);
 
+
+	//将所有数据后移8个字节（两个整型），以填充校验位和长度
+	i = len;
+	while (i--) {
+		src[i+8] = src[i];
+	}
+	((unsigned int *)src)[1] = len;
+
+	//填充校验码
 	switch (argv[1][0]){
 		case 'u':
 		case 'U':
-			src -= 1;// 1=>sizeof 0x13579BDF
-			src[0] = 0x13579BDF;
-			//Uboot's size is used by LPC32XX's Bootstrap
-			//the size shouldn't large than 56K
-			//refer LPC32XX's user manual
-			src[1] = 56*1024;
-			spi_flash_write(src, 0, len+4);
+			((unsigned int *)src)[0] = 0x13579BDF;
+			((unsigned int *)src)[1] = 56*1024;
+			dest=0;
 			break;
 		case 'k':
 		case 'K':
-			src    -= 2;
-			src[0]  = len;
-			src[1]  = crc32(0, src+2, len);
-			spi_flash_write(src, CONFIG_KERNEL_OFFSET, len+8);
+			((unsigned int *)src)[0] = crc32(0, src+8, len);
+			dest = CONFIG_KERNEL_OFFSET;
 			break;
 		case 'a':
 		case 'A':
-			src    -= 2;
-			src[0]  = len;
-			src[1]  = crc32(0, src+2, len);
-			spi_flash_write(src, CONFIG_APPFS_OFFSET, len+8);
+			((unsigned int *)src)[0] = crc32(0, src+8, len);
+			dest = CONFIG_APPFS_OFFSET;
 			break;
 		default:
 			cmd_usage(cmdtp);
 			return 1;
 	}
+
+	//擦除并写入
+	spi_flash_sector_erase(dest, len+8);
+	spi_flash_write(src, dest, len+8);
+
 	return 0;
 }
 
@@ -362,7 +350,7 @@ U_BOOT_CMD(
 	"spi flash applet install",
 	"<name> <src> <size> - auto erase and install <name> from <addr> into spi flash\n"
 	"<name> - name of applet ,such as uboot/kernel/appfs\n"
-	"<src>  - identifies the source address\n"
+	"<src>  - identifies source address\n"
 	"<size> - size of applet\n"
 );
 

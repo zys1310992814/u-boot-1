@@ -478,7 +478,8 @@ extern void davinci_eth_set_mac_addr (const u_int8_t *addr);
 #if defined(CONFIG_NET_MULTI)
 	puts ("Net:   ");
 #endif
-	eth_initialize(gd->bd);
+	//eth_initialize(gd->bd);
+	eth_init(gd->bd);
 #if defined(CONFIG_RESET_PHY_R)
 	debug ("Reset Ethernet PHY\n");
 	reset_phy();
